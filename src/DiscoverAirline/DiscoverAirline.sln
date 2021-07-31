@@ -57,6 +57,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{2B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoverAirline.Identity.API", "Security\DiscoverAirline.Identity.API\DiscoverAirline.Identity.API.csproj", "{396C1FFB-2D33-448E-B9BF-89B6EB5706F8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{751C90DE-6310-4059-B1E9-1F4F96F88E95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoverAirline.Gateway.API", "Gateway\DiscoverAirline.Gateway.API\DiscoverAirline.Gateway.API.csproj", "{AAB5F68F-7EE4-46C6-93E9-3865861F5C57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +123,10 @@ Global
 		{396C1FFB-2D33-448E-B9BF-89B6EB5706F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{396C1FFB-2D33-448E-B9BF-89B6EB5706F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{396C1FFB-2D33-448E-B9BF-89B6EB5706F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAB5F68F-7EE4-46C6-93E9-3865861F5C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAB5F68F-7EE4-46C6-93E9-3865861F5C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAB5F68F-7EE4-46C6-93E9-3865861F5C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAB5F68F-7EE4-46C6-93E9-3865861F5C57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,6 +156,7 @@ Global
 		{F677C3E2-E350-47CF-8916-8199FEDA5958} = {DA013A77-BAE2-41B2-B755-8E6C1920C0D8}
 		{931DB10D-BD05-4B9F-A944-907E0BD68914} = {DA013A77-BAE2-41B2-B755-8E6C1920C0D8}
 		{396C1FFB-2D33-448E-B9BF-89B6EB5706F8} = {2B2FA8BD-FFF6-4BE7-89FE-8F6DBEBF8323}
+		{AAB5F68F-7EE4-46C6-93E9-3865861F5C57} = {751C90DE-6310-4059-B1E9-1F4F96F88E95}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38E09ECD-3D8B-4730-9EDA-2C4B2912D50A}
