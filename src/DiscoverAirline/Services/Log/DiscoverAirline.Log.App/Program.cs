@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Backup.App
+namespace DiscoverAirline.Log.App
 {
     public class Program
     {
