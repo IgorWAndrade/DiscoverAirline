@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Benefits.API
+namespace DiscoverAirline.Miles.API
 {
     public class Program
     {
