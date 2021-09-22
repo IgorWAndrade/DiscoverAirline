@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreAPI\DiscoverAirline.CoreAPI.csproj" />
+		<ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreBroker\DiscoverAirline.CoreBroker.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

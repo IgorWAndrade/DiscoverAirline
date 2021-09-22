@@ -1,31 +1,24 @@
 ﻿using DiscoverAirline.CoreAPI;
 using DiscoverAirline.Security.API.Models.Request;
-using DiscoverAirline.Security.API.Services;
+using DiscoverAirline.Security.API.Services.Abastractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
 {
     public class UserController : CoreController
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _rolerManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
 
         public UserController(
-            UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> rolerManager,
-            SignInManager<IdentityUser> signInManager,
-            ITokenService tokenService)
+            ILogger<UserController> logger,
+            IUserService userService) : base(logger)
         {
-            _userManager = userManager;
-            _rolerManager = rolerManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
+            _userService = userService;
         }
+
 
         [HttpPost("Register")]
         [AllowAnonymous]
@@ -33,26 +26,10 @@ namespace DiscoverAirline.Security.API.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(model);
+                return CustomResponse(ModelState);
             }
 
-            var user = new IdentityUser()
-            {
-                Email = model.Email,
-                EmailConfirmed = true,
-                UserName = model.Email
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                //Publish - User.Id , User.Address
-
-                return Ok(CustomResponse(await _tokenService.GenerateTokenAsync(model.Email)));
-            }
-
-            return BadRequest(result.Errors);
+            return CustomResponse(await _userService.CreateAsync(model));
         }
 
     }

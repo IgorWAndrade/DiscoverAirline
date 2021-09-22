@@ -1,5 +1,6 @@
 ﻿using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.Security.API.Models.Response;
+using DiscoverAirline.Security.API.Services.Abastractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Services
+namespace DiscoverAirline.Security.API.Services.Implementations
 {
     public class TokenService : ITokenService
     {
@@ -42,7 +43,7 @@ namespace DiscoverAirline.Security.API.Services
 
             return new UserDefaultResponse
             {
-                AccessToken = tokenStr
+                AccessToken = string.Format($"Bearer {tokenStr}")
             };
         }
 

@@ -1,65 +1,60 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.Security.API.Models.Request;
-using DiscoverAirline.Security.API.Services;
+using DiscoverAirline.Security.API.Services.Abastractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
 {
     public class AuthenticationController : CoreController
     {
-        private readonly SecuritySettings _securitySettings;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _rolerManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ITokenService _tokenService;
+        private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(
-            IConfiguration configuration,
-            UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> rolerManager,
-            SignInManager<IdentityUser> signInManager,
-            ITokenService tokenService)
+            ILogger<AuthenticationController> logger,
+            IAuthenticationService authenticationService) : base(logger)
         {
-            _securitySettings = configuration.GetSection("SecuritySettings").Get<SecuritySettings>();
-            _userManager = userManager;
-            _rolerManager = rolerManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest model)
         {
+            Logger.LogInformation("Start HttpPost Login with Model", model);
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(model);
+                Logger.LogError("Finish HttpPost Login with Fail ModelState", model);
+                return CustomResponse(ModelState);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
-
-            if (result.Succeeded)
-            {
-                return Ok(CustomResponse(await _tokenService.GenerateTokenAsync(model.Email)));
-            }
-            else
-            {
-                return BadRequest("Usuário ou Senha incorretos");
-            }
-
-
+            Logger.LogInformation("Finish HttpPost Login with Model", model);
+            return CustomResponse(await _authenticationService.LoginAsync(model));
         }
 
         [HttpPost("Logout")]
-        public async Task<IActionResult> Logout([FromBody] UserLoggedInRequest model) => Ok("Logout in Building");
+        public async Task<IActionResult> Logout([FromBody] UserLoggedInRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return CustomResponse(ModelState);
+            }
+            return CustomResponse(await _authenticationService.LogoutAsync(model));
+        }
+
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh([FromBody] UserLoggedInRequest model) => Ok("Refresh in Building");
+        public async Task<IActionResult> Refresh([FromBody] UserLoggedInRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return CustomResponse(ModelState);
+            }
+            return CustomResponse(await _authenticationService.RefreshAsync(model));
+        }
 
 
     }

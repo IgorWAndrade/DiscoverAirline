@@ -1,6 +1,7 @@
 ﻿using DiscoverAirline.CoreAPI.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -8,8 +9,11 @@ namespace DiscoverAirline.CoreAPI.Extensions
 {
     public static class DocumentationExtension
     {
-        public static IServiceCollection AddDocumentationServices(this IServiceCollection services, DocumentationSettings documentationSettings)
+        public static IServiceCollection AddDocumentationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            //TOD: Configuration in Appsettigns
+
+            var documentationSettings = DocumentationSettings.Create();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo()

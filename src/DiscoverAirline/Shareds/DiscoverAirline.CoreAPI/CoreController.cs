@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DiscoverAirline.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace DiscoverAirline.CoreAPI
 {
@@ -10,10 +13,37 @@ namespace DiscoverAirline.CoreAPI
     [Produces("application/json")]
     public class CoreController : ControllerBase
     {
+        protected readonly ILogger<CoreController> Logger;
+        protected Notification Notification;
 
-        protected string CustomResponse(object response)
+        public CoreController(ILogger<CoreController> logger)
         {
-            return JsonConvert.SerializeObject(response, Formatting.Indented);
+            this.Logger = logger;
+        }
+
+        protected ActionResult CustomResponse(Notification notification = null)
+        {
+            if (notification != null)
+            {
+                Notification = notification;
+            }
+
+            if (Notification.IsValid())
+            {
+                return Ok(Notification.Get());
+            }
+            return BadRequest(Notification.Get());
+        }
+
+        protected ActionResult CustomResponse(ModelStateDictionary modelState)
+        {
+            var erros = modelState.Values.SelectMany(e => e.Errors);
+            foreach (var erro in erros)
+            {
+                Notification.AddError(erro.ErrorMessage);
+            }
+
+            return CustomResponse();
         }
     }
 }

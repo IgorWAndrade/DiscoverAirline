@@ -1,5 +1,4 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.Security.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,9 +23,11 @@ namespace DiscoverAirline.Security.API
 
             services.AddApiServices(Configuration);
 
-            services.AddDocumentationServices(DocumentationSettings.Create());
+            services.AddDocumentationServices(Configuration);
 
             services.AddAppServices();
+
+            services.AddLogServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
