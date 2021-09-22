@@ -1,5 +1,4 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +19,7 @@ namespace DiscoverAirline.Gateway.API
         {
             services.AddApiServices(Configuration);
 
-            services.AddDocumentationServices(DocumentationSettings.Create());
+            services.AddDocumentationServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
