@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_discoverairline
+    ports:
+      - "15672:15672" 
+      - "5672:5672"
+      - "25676:25676"
+    volumes:
+     - ./esdata:/usr/share/rabbitmq/data   
+
+  seq:
+    image: datalust/seq
+    container_name: seq_discoverairline
+    ports:
+      - "8044:80"
+      - "5344:5341"
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+     - ./esdata:/usr/share/seq/data   
+    
+volumes:
+  esdata:   
