@@ -18,8 +18,7 @@ namespace DiscoverAirline.CoreAPI.Extensions
                 options.SetEvaluationTimeInSeconds(5);
                 options.MaximumHistoryEntriesPerEndpoint(10);
                 options.AddHealthCheckEndpoint($"DiscoverAirline - {name} - Serviço Health Checks", "/health");
-            })
-.AddInMemoryStorage();
+            }).AddInMemoryStorage();
 
             return services;
         }

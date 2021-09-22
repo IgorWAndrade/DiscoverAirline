@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.IO;
 
 namespace DiscoverAirline.Trip.API
 {
@@ -17,6 +19,19 @@ namespace DiscoverAirline.Trip.API
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                });
+                })
+            .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                var env = hostingContext.HostingEnvironment;
+
+                var settingPath = Path.GetFullPath(Path.Combine(@"../../Shareds/DiscoverAirline.CoreAPI/sharedappsettings.json"));
+
+                config
+                    .AddJsonFile(Path.Combine(settingPath), optional: false)
+                    .AddJsonFile("appsettings.json", optional: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+                config.AddEnvironmentVariables();
+            });
     }
 }
