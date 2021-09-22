@@ -1,5 +1,7 @@
 using DiscoverAirline.CoreAPI.Extensions;
 using DiscoverAirline.CoreAPI.Settings;
+using DiscoverAirline.Customer.API.Events;
+using DiscoverAirline.Customer.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +22,11 @@ namespace DiscoverAirline.Customer.API
         {
             services.AddApiServices(Configuration);
 
-            services.AddDocumentationServices(DocumentationSettings.Create());
+            services.AddDocumentationServices(Configuration);
+
+            services.AddAppService();
+
+            services.AddLogServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
