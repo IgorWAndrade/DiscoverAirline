@@ -1,5 +1,4 @@
-﻿using DiscoverAirline.CoreAPI.Settings;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +21,8 @@ namespace DiscoverAirline.CoreAPI.Extensions
                        .AllowAnyHeader();
             }));
 
+            services.AddHealthCheckServices(configuration);
+
             return services;
         }
 
@@ -42,6 +43,8 @@ namespace DiscoverAirline.CoreAPI.Extensions
             {
                 endPoint.MapControllers();
             });
+
+            app.UseHealthCheck();
 
             return app;
         }
