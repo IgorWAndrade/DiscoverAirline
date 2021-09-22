@@ -20,7 +20,9 @@ namespace DiscoverAirline.Miles.API
         {
             services.AddApiServices(Configuration);
 
-            services.AddDocumentationServices(DocumentationSettings.Create());
+            services.AddDocumentationServices(Configuration);
+
+            services.AddLogServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
