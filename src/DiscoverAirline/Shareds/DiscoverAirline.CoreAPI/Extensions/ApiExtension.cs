@@ -14,13 +14,6 @@ namespace DiscoverAirline.CoreAPI.Extensions
 
             services.AddControllers();
 
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
-
             services.AddHealthCheckServices(configuration);
 
             return services;
@@ -32,7 +25,7 @@ namespace DiscoverAirline.CoreAPI.Extensions
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

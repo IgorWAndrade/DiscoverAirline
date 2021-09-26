@@ -10,33 +10,45 @@ namespace DiscoverAirline.Security.API.Controllers
 {
     public class AuthenticationController : CoreController
     {
+        private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
+            IUserService userService,
             IAuthenticationService authenticationService) : base(logger)
         {
+            _userService = userService;
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("Login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] UserLoginRequest model)
-        {
-            Logger.LogInformation("Start HttpPost Login with Model", model);
 
+        [HttpPost("Signup")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Signup([FromBody] UserRegisterRequest model)
+        {
             if (!ModelState.IsValid)
             {
-                Logger.LogError("Finish HttpPost Login with Fail ModelState", model);
                 return CustomResponse(ModelState);
             }
 
-            Logger.LogInformation("Finish HttpPost Login with Model", model);
+            return CustomResponse(await _userService.CreateAsync(model));
+        }
+
+        [HttpPost("Signin")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Signin([FromBody] UserLoginRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return CustomResponse(ModelState);
+            }
+
             return CustomResponse(await _authenticationService.LoginAsync(model));
         }
 
-        [HttpPost("Logout")]
-        public async Task<IActionResult> Logout([FromBody] UserLoggedInRequest model)
+        [HttpPost("Signout")]
+        public async Task<IActionResult> Signout([FromBody] UserLoggedInRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -44,7 +56,6 @@ namespace DiscoverAirline.Security.API.Controllers
             }
             return CustomResponse(await _authenticationService.LogoutAsync(model));
         }
-
 
         [HttpPost("Refresh")]
         public async Task<IActionResult> Refresh([FromBody] UserLoggedInRequest model)
@@ -56,6 +67,13 @@ namespace DiscoverAirline.Security.API.Controllers
             return CustomResponse(await _authenticationService.RefreshAsync(model));
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _userService.GetAllAsync();
 
+            return CustomResponse(result);
+        }
     }
 }

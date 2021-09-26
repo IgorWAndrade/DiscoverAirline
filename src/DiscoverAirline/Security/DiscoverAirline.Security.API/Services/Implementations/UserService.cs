@@ -4,6 +4,7 @@ using DiscoverAirline.Security.API.Events;
 using DiscoverAirline.Security.API.Models.Request;
 using DiscoverAirline.Security.API.Services.Abastractions;
 using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Services.Implementations
@@ -62,6 +63,15 @@ namespace DiscoverAirline.Security.API.Services.Implementations
             }
 
             return notification;
+        }
+
+        public async Task<Notification> GetAllAsync()
+        {
+            var obj = new Notification();
+
+            obj.SetData(_userManager.Users.ToList());
+
+            return await Task.FromResult(obj);
         }
     }
 }
