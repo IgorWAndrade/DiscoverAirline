@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DiscoverAirline.Security.API.Models.Response
 {
     public class UserDefaultResponse
     {
         public string AccessToken { get; set; }
-        public string RefreshAccessToken { get; set; }
-        public double ExpiresIn { get; set; }
+        public RefreshToken RefreshAccessToken { get; set; }
+        public string Type_Acess { get; set; }
+        public DateTime ExpiresIn { get; set; }
         public UserToken UsuarioToken { get; set; }
     }
 
@@ -21,5 +23,12 @@ namespace DiscoverAirline.Security.API.Models.Response
     {
         public string Value { get; set; }
         public string Type { get; set; }
+    }
+
+    public class RefreshToken
+    {
+        public string Username { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpirationDate { get; set; }
     }
 }

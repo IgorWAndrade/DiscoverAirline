@@ -25,12 +25,14 @@ namespace DiscoverAirline.CoreAPI.Extensions
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
+                    ValidateActor = true,
                     ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = securitySettings.Issuer,
                     ValidAudience = securitySettings.Audience,
-                    ValidIssuer = securitySettings.Issuer
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
 

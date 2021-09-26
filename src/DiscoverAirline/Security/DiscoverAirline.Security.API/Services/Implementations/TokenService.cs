@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,12 +31,14 @@ namespace DiscoverAirline.Security.API.Services.Implementations
             var subject = await CreateSubject(user);
             var key = Encoding.ASCII.GetBytes(_securitySettings.Secret);
 
+            var hoursExpiration = DateTime.UtcNow.AddHours(_securitySettings.ExpirationInHours);
+
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
                 Issuer = _securitySettings.Issuer,
                 Audience = _securitySettings.Audience,
                 Subject = subject,
-                Expires = DateTime.UtcNow.AddHours(_securitySettings.ExpirationInHours),
+                Expires = hoursExpiration,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
@@ -43,8 +46,35 @@ namespace DiscoverAirline.Security.API.Services.Implementations
 
             return new UserDefaultResponse
             {
-                AccessToken = string.Format($"Bearer {tokenStr}")
+                AccessToken = string.Format($"Bearer {tokenStr}"),
+                RefreshAccessToken = CreateRefreshToken(email),
+                Type_Acess = "Bearer",
+                ExpiresIn = hoursExpiration
             };
+        }
+
+        private RefreshToken CreateRefreshToken(string email)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Username = email,
+                ExpirationDate = DateTime.UtcNow.AddHours(_securitySettings.ExpirationRefreshInHours)
+            };
+
+            string token;
+            var randomNumber = new byte[32];
+
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                token = Convert.ToBase64String(randomNumber);
+            }
+
+            refreshToken.Token = token.Replace("+", string.Empty)
+                .Replace("=", string.Empty)
+                .Replace("/", string.Empty);
+
+            return refreshToken;
         }
 
         private async Task<ClaimsIdentity> CreateSubject(IdentityUser user)
