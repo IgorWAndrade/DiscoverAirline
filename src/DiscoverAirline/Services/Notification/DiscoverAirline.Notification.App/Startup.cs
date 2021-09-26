@@ -1,5 +1,4 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +22,8 @@ namespace DiscoverAirline.Notification.App
             services.AddDocumentationServices(Configuration);
 
             services.AddLogServices(Configuration);
+
+            services.AddServiceDiscovery(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,6 +31,8 @@ namespace DiscoverAirline.Notification.App
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
     }
 }

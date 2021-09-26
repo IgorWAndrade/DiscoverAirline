@@ -28,6 +28,8 @@ namespace DiscoverAirline.Security.API
             services.AddAppServices();
 
             services.AddLogServices(Configuration);
+
+            services.AddServiceDiscovery(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +38,8 @@ namespace DiscoverAirline.Security.API
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
     }
 }

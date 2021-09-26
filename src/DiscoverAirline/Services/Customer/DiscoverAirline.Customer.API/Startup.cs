@@ -27,6 +27,8 @@ namespace DiscoverAirline.Customer.API
             services.AddAppService();
 
             services.AddLogServices(Configuration);
+
+            services.AddServiceDiscovery(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -34,6 +36,8 @@ namespace DiscoverAirline.Customer.API
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
     }
 }
