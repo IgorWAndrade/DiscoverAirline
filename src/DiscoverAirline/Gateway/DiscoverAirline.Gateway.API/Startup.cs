@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
 namespace DiscoverAirline.Gateway.API
 {
@@ -19,14 +21,14 @@ namespace DiscoverAirline.Gateway.API
         {
             services.AddApiServices(Configuration);
 
-            services.AddDocumentationServices(Configuration);
+            services.AddOcelot();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDocumentation(env);
-
             app.UseApi(env);
+
+            app.UseOcelot().Wait();
         }
     }
 }

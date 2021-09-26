@@ -1,0 +1,17 @@
+{
+  "Routes": [
+    {
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44344
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Authentication",
+      "UpstreamPathTemplate": "/security/authentication",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Options" ]
+    }
+  ],
+  "GlobalConfiguration": {}
+}

@@ -1,12 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DiscoverAirline.Gateway.API
 {
@@ -32,7 +27,8 @@ namespace DiscoverAirline.Gateway.API
                 config
                     .AddJsonFile(Path.Combine(settingPath), optional: false)
                     .AddJsonFile("appsettings.json", optional: true)
-                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                    .AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
                 config.AddEnvironmentVariables();
             });
