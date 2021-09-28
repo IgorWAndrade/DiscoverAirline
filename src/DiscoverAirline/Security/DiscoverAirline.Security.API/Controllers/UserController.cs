@@ -1,6 +1,6 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.Security.API.Models.Request;
-using DiscoverAirline.Security.API.Services.Abastractions;
+using DiscoverAirline.Security.API.Core.Services;
+using DiscoverAirline.Security.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
 {
-    public class AuthenticationController : CoreController
+    public class UserController : CoreController
     {
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController(
-            ILogger<AuthenticationController> logger,
+        public UserController(
+            ILogger<UserController> logger,
             IUserService userService,
             IAuthenticationService authenticationService) : base(logger)
         {

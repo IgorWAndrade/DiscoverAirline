@@ -1,6 +1,6 @@
 ﻿using DiscoverAirline.CoreBroker;
-using DiscoverAirline.Security.API.Services.Abastractions;
-using DiscoverAirline.Security.API.Services.Implementations;
+using DiscoverAirline.Security.API.Core.Services;
+using DiscoverAirline.Security.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscoverAirline.Security.API.Extensions

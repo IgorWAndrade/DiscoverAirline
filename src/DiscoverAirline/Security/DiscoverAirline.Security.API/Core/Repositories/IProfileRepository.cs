@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Models.Request
+namespace DiscoverAirline.Security.API.Core.Repositories
 {
-    public class UserLoggedInRequest
+    public interface IProfileRepository
     {
     }
 }

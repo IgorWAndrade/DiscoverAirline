@@ -1,33 +1,33 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.CoreBroker;
-using DiscoverAirline.Security.API.Events;
-using DiscoverAirline.Security.API.Models.Request;
-using DiscoverAirline.Security.API.Services.Abastractions;
+using DiscoverAirline.Security.API.Core.Events;
+using DiscoverAirline.Security.API.Core.Services;
+using DiscoverAirline.Security.API.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Services.Implementations
+namespace DiscoverAirline.Security.API.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _rolerManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly ITokenService _tokenService;
+        private readonly IAuthenticationService _authenticationService;
         private readonly IMessageBrokerPublish _messageBroker;
 
         public UserService(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> rolerManager,
             SignInManager<IdentityUser> signInManager,
-            ITokenService tokenService,
+            IAuthenticationService authenticationService,
             IMessageBrokerPublish messageBroker)
         {
             _userManager = userManager;
             _rolerManager = rolerManager;
             _signInManager = signInManager;
-            _tokenService = tokenService;
+            _authenticationService = authenticationService;
             _messageBroker = messageBroker;
         }
 
@@ -52,7 +52,7 @@ namespace DiscoverAirline.Security.API.Services.Implementations
                 _messageBroker.Publish("UserCreated_SecurityService", UserCreatedEvent.Create("SecurityService", "CustomerService", @event));
 
                 notification.SetMessage("Usuário criado com sucesso!");
-                notification.SetData(await _tokenService.GenerateTokenAsync(model.Email));
+                notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));
             }
             else
             {
@@ -72,6 +72,32 @@ namespace DiscoverAirline.Security.API.Services.Implementations
             obj.SetData(_userManager.Users.ToList());
 
             return await Task.FromResult(obj);
+        }
+
+        public async Task<Notification> LoginAsync(UserLoginRequest model)
+        {
+            var notification = new Notification();
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, true);
+
+            if (result.Succeeded)
+            {
+                notification.SetMessage("Usuário logado com sucesso!");
+                notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));
+                return notification;
+            }
+
+            notification.AddError("Usuário ou Senha incorretos");
+
+            return notification;
+        }
+
+        public async Task<Notification> LogoutAsync(UserLoggedInRequest model)
+        {
+            var notification = new Notification();
+
+            notification.SetMessage("Logout in Building");
+
+            return await Task.FromResult(notification);
         }
     }
 }

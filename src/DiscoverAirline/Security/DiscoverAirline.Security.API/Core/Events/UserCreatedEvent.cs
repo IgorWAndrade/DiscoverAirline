@@ -1,8 +1,8 @@
 ﻿using DiscoverAirline.CoreBroker;
-using DiscoverAirline.Security.API.Models.Request;
+using DiscoverAirline.Security.API.Models;
 using Newtonsoft.Json;
 
-namespace DiscoverAirline.Security.API.Events
+namespace DiscoverAirline.Security.API.Core.Events
 {
     public class UserCreatedEvent
     {

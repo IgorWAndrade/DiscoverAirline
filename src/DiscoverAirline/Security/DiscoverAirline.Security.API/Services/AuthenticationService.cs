@@ -1,6 +1,7 @@
-﻿using DiscoverAirline.CoreAPI.Settings;
-using DiscoverAirline.Security.API.Models.Response;
-using DiscoverAirline.Security.API.Services.Abastractions;
+﻿using DiscoverAirline.Core;
+using DiscoverAirline.CoreAPI.Settings;
+using DiscoverAirline.Security.API.Core.Services;
+using DiscoverAirline.Security.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -11,17 +12,29 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Services.Implementations
+namespace DiscoverAirline.Security.API.Services
 {
-    public class TokenService : ITokenService
+    public class AuthenticationService : IAuthenticationService
     {
+
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SecuritySettings _securitySettings;
 
-        public TokenService(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthenticationService(UserManager<IdentityUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _securitySettings = configuration.GetSection("SecuritySettings").Get<SecuritySettings>();
+        }
+
+
+
+        public async Task<Notification> RefreshAsync(UserLoggedInRequest model)
+        {
+            var notification = new Notification();
+
+            notification.SetMessage("Refresh in Building");
+
+            return await Task.FromResult(notification);
         }
 
         public async Task<UserDefaultResponse> GenerateTokenAsync(string email)
