@@ -1,7 +1,7 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.Security.API.Core.Services;
-using DiscoverAirline.Security.API.Models;
+using DiscoverAirline.Security.API.Services.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

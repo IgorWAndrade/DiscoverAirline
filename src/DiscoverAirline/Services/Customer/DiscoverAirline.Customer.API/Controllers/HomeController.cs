@@ -1,20 +1,25 @@
 ﻿using DiscoverAirline.CoreAPI;
 using DiscoverAirline.CoreAPI.Attribute;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace DiscoverAirline.Customer.API.Controllers
 {
     public class HomeController : CoreController
     {
-        public HomeController(ILogger<HomeController> logger) : base(logger)
+        private readonly IMemoryCache _memoryCache;
+        public HomeController(ILogger<HomeController> logger, IMemoryCache memoryCache) : base(logger)
         {
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            return Ok(User.Identity.Name);
+            return Ok(_memoryCache.Get("ListAddress"));
         }
 
         [HttpPost]

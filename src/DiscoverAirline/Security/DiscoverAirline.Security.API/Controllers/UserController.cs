@@ -1,9 +1,12 @@
 ﻿using DiscoverAirline.CoreAPI;
+using DiscoverAirline.CoreBroker.Abstractions;
 using DiscoverAirline.Security.API.Core.Services;
-using DiscoverAirline.Security.API.Models;
+using DiscoverAirline.Security.API.Services.Dtos;
+using DiscoverAirline.Security.API.Services.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
@@ -12,14 +15,17 @@ namespace DiscoverAirline.Security.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
+        private readonly IEventBusPub _eventBus;
 
         public UserController(
             ILogger<UserController> logger,
             IUserService userService,
-            IAuthenticationService authenticationService) : base(logger)
+            IAuthenticationService authenticationService,
+            IEventBusPub eventBus) : base(logger)
         {
             _userService = userService;
             _authenticationService = authenticationService;
+            _eventBus = eventBus;
         }
 
 
@@ -44,7 +50,7 @@ namespace DiscoverAirline.Security.API.Controllers
                 return CustomResponse(ModelState);
             }
 
-            return CustomResponse(await _authenticationService.LoginAsync(model));
+            return CustomResponse(await _userService.LoginAsync(model));
         }
 
         [HttpPost("Signout")]
@@ -54,7 +60,7 @@ namespace DiscoverAirline.Security.API.Controllers
             {
                 return CustomResponse(ModelState);
             }
-            return CustomResponse(await _authenticationService.LogoutAsync(model));
+            return CustomResponse(await _userService.LogoutAsync(model));
         }
 
         [HttpPost("Refresh")]
@@ -65,15 +71,6 @@ namespace DiscoverAirline.Security.API.Controllers
                 return CustomResponse(ModelState);
             }
             return CustomResponse(await _authenticationService.RefreshAsync(model));
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> Get()
-        {
-            var result = await _userService.GetAllAsync();
-
-            return CustomResponse(result);
         }
     }
 }

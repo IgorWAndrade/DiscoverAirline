@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiscoverAirline.Security.API.Models
+namespace DiscoverAirline.Security.API.Services.Dtos
 {
     public class UserDefaultResponse
     {

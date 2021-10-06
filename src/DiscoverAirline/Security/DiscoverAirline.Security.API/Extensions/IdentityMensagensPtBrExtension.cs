@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace DiscoverAirline.Security.API.Extensions
+namespace DiscoverAirline.Security.API.Application.Extensions
 {
     public class IdentityMensagensPtBrExtension : IdentityErrorDescriber
     {

@@ -1,8 +1,9 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.CoreBroker;
-using DiscoverAirline.Security.API.Core.Events;
+using DiscoverAirline.CoreBroker.Abstractions;
 using DiscoverAirline.Security.API.Core.Services;
-using DiscoverAirline.Security.API.Models;
+using DiscoverAirline.Security.API.Services.Dtos;
+using DiscoverAirline.Security.API.Services.Events;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,20 +16,20 @@ namespace DiscoverAirline.Security.API.Services
         private readonly RoleManager<IdentityRole> _rolerManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IMessageBrokerPublish _messageBroker;
+        private readonly IEventBusPub _eventBus;
 
         public UserService(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> rolerManager,
             SignInManager<IdentityUser> signInManager,
-            IAuthenticationService authenticationService,
-            IMessageBrokerPublish messageBroker)
+            IAuthenticationService authenticationService, 
+            IEventBusPub eventBus)
         {
             _userManager = userManager;
             _rolerManager = rolerManager;
             _signInManager = signInManager;
             _authenticationService = authenticationService;
-            _messageBroker = messageBroker;
+            _eventBus = eventBus;
         }
 
         public async Task<Notification> CreateAsync(UserRegisterRequest model)
@@ -47,9 +48,8 @@ namespace DiscoverAirline.Security.API.Services
             if (result.Succeeded)
             {
                 await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-
-                var @event = new UserCreatedEvent(user.Id, user.UserName, model.Address);
-                _messageBroker.Publish("UserCreated_SecurityService", UserCreatedEvent.Create("SecurityService", "CustomerService", @event));
+                
+                _eventBus.Publish(new UserCreatedEvent("SecurityService", "CustomerService", user.Id, user.UserName, model.Address));
 
                 notification.SetMessage("Usuário criado com sucesso!");
                 notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));

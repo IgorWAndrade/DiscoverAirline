@@ -1,4 +1,5 @@
 ﻿using DiscoverAirline.Customer.API.Events;
+using DiscoverAirline.Customer.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscoverAirline.Customer.API.Extensions
@@ -7,7 +8,7 @@ namespace DiscoverAirline.Customer.API.Extensions
     {
         public static IServiceCollection AddAppService(this IServiceCollection services)
         {
-            services.AddHostedService<CustomerAddressCreatedConsumer>();
+            services.AddSingleton<ICustomerService, CustomerService>();
 
             return services;
         }

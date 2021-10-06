@@ -1,5 +1,4 @@
 ﻿using DiscoverAirline.CoreAPI;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace DiscoverAirline.Security.API.Controllers
@@ -8,11 +7,6 @@ namespace DiscoverAirline.Security.API.Controllers
     {
         public ProfileController(ILogger<CoreController> logger) : base(logger)
         {
-        }
-
-        public IActionResult Index()
-        {
-            return Ok();
         }
     }
 }
