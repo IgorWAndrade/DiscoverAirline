@@ -7,15 +7,7 @@ namespace DiscoverAirline.Customer.API.Controllers
 {
     public class HomeController : CoreController
     {
-        public HomeController(ILogger<HomeController> logger) : base(logger)
-        {
-        }
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return Ok(User.Identity.Name);
-        }
+        public HomeController(ILogger<HomeController> logger) : base(logger) { }
 
         [HttpPost]
         [AuthorizationCustom(nameof(HomeController), "Customer", "add")]

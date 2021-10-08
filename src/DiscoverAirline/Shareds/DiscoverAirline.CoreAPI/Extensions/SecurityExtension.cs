@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace DiscoverAirline.CoreAPI.Extensions
@@ -25,12 +26,16 @@ namespace DiscoverAirline.CoreAPI.Extensions
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
+                    ValidateActor = true,
                     ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = securitySettings.Issuer,
                     ValidAudience = securitySettings.Audience,
-                    ValidIssuer = securitySettings.Issuer
+                    RequireExpirationTime = false,
+                    ClockSkew = TimeSpan.Zero,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
 
@@ -44,6 +49,26 @@ namespace DiscoverAirline.CoreAPI.Extensions
             app.UseAuthorization();
 
             return app;
+        }
+
+        public static TokenValidationParameters ValidationParameters(IConfiguration configuration)
+        {
+            var securitySettings = configuration.GetSection("SecuritySettings").Get<SecuritySettings>();
+            var key = Encoding.ASCII.GetBytes(securitySettings.Secret);
+
+            return new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateActor = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = securitySettings.Issuer,
+                ValidAudience = securitySettings.Audience,
+                RequireExpirationTime = false,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            };
         }
     }
 }

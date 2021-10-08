@@ -16,6 +16,13 @@ namespace DiscoverAirline.CoreAPI.Extensions
 
             services.AddHealthCheckServices(configuration);
 
+            services.AddCors(o => o.AddPolicy("FreeUse", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             return services;
         }
 
@@ -24,8 +31,10 @@ namespace DiscoverAirline.CoreAPI.Extensions
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors("FreeUse");
             }
-            
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

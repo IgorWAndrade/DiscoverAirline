@@ -1,6 +1,6 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Settings;
-using DiscoverAirline.Customer.API.Events;
+using DiscoverAirline.CoreBroker.Extensions;
+using DiscoverAirline.Customer.API.Events.Subscribers;
 using DiscoverAirline.Customer.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,9 +26,19 @@ namespace DiscoverAirline.Customer.API
 
             services.AddAppService();
 
+            services.AddEventBusService(Configuration);
+
+            AddEventBusSubscribers(services);
+
             services.AddLogServices(Configuration);
 
             services.AddServiceDiscovery(Configuration);
+        }
+
+        private void AddEventBusSubscribers(IServiceCollection services)
+        {
+            services.AddEventBusService(Configuration);
+            services.AddHostedService<UserCreatedSubscriber>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -39,5 +49,6 @@ namespace DiscoverAirline.Customer.API
 
             app.UseServiceDiscovery(Configuration);
         }
+
     }
 }

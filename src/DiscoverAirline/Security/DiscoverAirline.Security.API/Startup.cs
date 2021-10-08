@@ -1,5 +1,6 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.Security.API.Extensions;
+using DiscoverAirline.CoreBroker.Extensions;
+using DiscoverAirline.Security.API.Application.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,8 @@ namespace DiscoverAirline.Security.API
             services.AddLogServices(Configuration);
 
             services.AddServiceDiscovery(Configuration);
+            
+            services.AddEventBusService(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,5 +44,6 @@ namespace DiscoverAirline.Security.API
 
             app.UseServiceDiscovery(Configuration);
         }
+
     }
 }

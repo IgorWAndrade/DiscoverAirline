@@ -1,10 +1,9 @@
-﻿using DiscoverAirline.Security.API.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DiscoverAirline.Security.API.Extensions
+namespace DiscoverAirline.Security.API.Application.Extensions
 {
     public static class IdentityExtension
     {
