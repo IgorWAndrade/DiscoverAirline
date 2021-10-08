@@ -6,7 +6,7 @@ namespace DiscoverAirline.Security.API.Services.Events
 {
     public class UserCreatedEvent : IntegrationEvent
     {
-        public UserCreatedEvent(string to, string from, string userId, string userName, UserAddressRequest address) : base(to, from)
+        public UserCreatedEvent(string userId, string userName, UserAddressRequest address)
         {
             UserId = userId;
             UserName = userName;

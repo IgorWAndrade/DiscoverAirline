@@ -16,14 +16,14 @@ namespace DiscoverAirline.Security.API.Services
         private readonly RoleManager<IdentityRole> _rolerManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEventBusPub _eventBus;
+        private readonly IEventBus _eventBus;
 
         public UserService(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> rolerManager,
             SignInManager<IdentityUser> signInManager,
-            IAuthenticationService authenticationService, 
-            IEventBusPub eventBus)
+            IAuthenticationService authenticationService,
+            IEventBus eventBus)
         {
             _userManager = userManager;
             _rolerManager = rolerManager;
@@ -48,8 +48,7 @@ namespace DiscoverAirline.Security.API.Services
             if (result.Succeeded)
             {
                 await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
-                
-                _eventBus.Publish(new UserCreatedEvent("SecurityService", "CustomerService", user.Id, user.UserName, model.Address));
+                await _eventBus.PublishAsync<UserCreatedEvent>("UserCreatedEvent", new UserCreatedEvent(user.Id, user.UserName, model.Address));
 
                 notification.SetMessage("Usuário criado com sucesso!");
                 notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));

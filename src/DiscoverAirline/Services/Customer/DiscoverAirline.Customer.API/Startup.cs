@@ -1,6 +1,6 @@
 using DiscoverAirline.CoreAPI.Extensions;
 using DiscoverAirline.CoreBroker.Extensions;
-using DiscoverAirline.Customer.API.Events.EventsHandles;
+using DiscoverAirline.Customer.API.Events.Subscribers;
 using DiscoverAirline.Customer.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,14 +30,13 @@ namespace DiscoverAirline.Customer.API
 
             AddEventBusSubscribers(services);
 
-            services.AddMemoryCache();
-
             services.AddLogServices(Configuration);
         }
 
         private void AddEventBusSubscribers(IServiceCollection services)
         {
-            services.AddHostedService<CustomerAddressReceived>();
+            services.AddEventBusService(Configuration);
+            services.AddHostedService<UserCreatedSubscriber>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

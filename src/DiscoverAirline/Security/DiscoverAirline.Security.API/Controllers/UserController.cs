@@ -15,17 +15,14 @@ namespace DiscoverAirline.Security.API.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IEventBusPub _eventBus;
 
         public UserController(
             ILogger<UserController> logger,
             IUserService userService,
-            IAuthenticationService authenticationService,
-            IEventBusPub eventBus) : base(logger)
+            IAuthenticationService authenticationService) : base(logger)
         {
             _userService = userService;
             _authenticationService = authenticationService;
-            _eventBus = eventBus;
         }
 
 

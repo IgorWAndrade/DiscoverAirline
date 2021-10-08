@@ -1,10 +1,13 @@
-﻿using RabbitMQ.Client;
+﻿using DiscoverAirline.CoreBroker.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace DiscoverAirline.CoreBroker.Abstractions
 {
     public interface IEventBus
     {
-        IModel CreateModel();
-        string CreateQueueName(string brokerName, string eventName);
+        void TryConnect();
+        Task PublishAsync<T>(string queue, T message) where T : IntegrationEvent;
+        Task SubscribeAsync<T>(string queue, Func<string, Task> action);
     }
 }

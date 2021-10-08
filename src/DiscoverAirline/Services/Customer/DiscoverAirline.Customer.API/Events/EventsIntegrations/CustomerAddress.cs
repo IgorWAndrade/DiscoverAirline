@@ -6,9 +6,11 @@ namespace DiscoverAirline.Customer.API.Events.EventsIntegrations
 {
     public class CustomerReceived : IntegrationEvent
     {
-        public CustomerReceived(string to, string from) : base(to, from)
-        {
-        }
+        [JsonInclude]
+        public string UserId { get; set; }
+
+        [JsonInclude]
+        public string UserName { get; set; }
 
         [JsonInclude]
         public CustomerAddress Address { get; set; }
@@ -16,19 +18,19 @@ namespace DiscoverAirline.Customer.API.Events.EventsIntegrations
 
     public class CustomerAddress
     {
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonInclude]
         public string Number { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonInclude]
         public string Street { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonInclude]
         public string District { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonInclude]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [JsonInclude]
         public string ZipCode { get; set; }
     }
 }

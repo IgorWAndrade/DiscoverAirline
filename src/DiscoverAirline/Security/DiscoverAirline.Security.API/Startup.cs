@@ -1,9 +1,6 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreBroker.Abstractions;
-using DiscoverAirline.CoreBroker.Events;
 using DiscoverAirline.CoreBroker.Extensions;
 using DiscoverAirline.Security.API.Application.Extensions;
-using DiscoverAirline.Security.API.Services.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,8 +37,6 @@ namespace DiscoverAirline.Security.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseDocumentation(env);
-
-            app.UseAppServices();
 
             app.UseApi(env);
         }

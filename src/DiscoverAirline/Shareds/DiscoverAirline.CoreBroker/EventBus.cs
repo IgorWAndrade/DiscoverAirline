@@ -1,13 +1,19 @@
 ﻿using DiscoverAirline.CoreBroker.Abstractions;
+using DiscoverAirline.CoreBroker.Events;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System;
+using System.Threading.Tasks;
 
 namespace DiscoverAirline.CoreBroker
 {
     public class EventBus : IEventBus
     {
+        private IModel _channel;
         private IConnection _connection;
         private IConnectionFactory _connectionFactory;
+
+        private const string BROKER_NAME = "discoverairline_event_bus";
 
         public EventBus()
         {
@@ -22,17 +28,7 @@ namespace DiscoverAirline.CoreBroker
             }
         }
 
-        public IModel CreateModel()
-        {
-            if (!IsConnected)
-            {
-                TryConnect();
-            }
-
-            return _connection.CreateModel();
-        }
-
-        public bool TryConnect()
+        public void TryConnect()
         {
             if (_connectionFactory == null)
             {
@@ -47,39 +43,61 @@ namespace DiscoverAirline.CoreBroker
 
             if (IsConnected)
             {
-                _connection.ConnectionShutdown += OnConnectionShutdown;
-                _connection.CallbackException += OnCallbackException;
-                _connection.ConnectionBlocked += OnConnectionBlocked;
-
-                return true;
+                Console.WriteLine($"Message Broker {IsConnected}");
             }
             else
             {
-                return false;
+                Console.WriteLine($"Message Broker {IsConnected}");
             }
         }
 
-        public string CreateQueueName(string brokerName, string eventName) => $"{brokerName}:{eventName}";
-
-        protected void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
+        public Task PublishAsync<T>(string queueDeclare, T message) where T : IntegrationEvent
         {
-            //_logger.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
+            if (!IsConnected)
+            {
+                TryConnect();
+            }
 
-            TryConnect();
+            var _channel = CreateModel();
+            var queue = CreateQueueName(BROKER_NAME, queueDeclare);
+            var body = IntegrationEvent.ToByte(message);
+
+            _channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            _channel.BasicPublish(exchange: "", routingKey: queue, basicProperties: null, body: body);
+
+            return Task.CompletedTask;
         }
 
-        protected void OnCallbackException(object sender, CallbackExceptionEventArgs e)
+        public Task SubscribeAsync<T>(string queueDeclare, Func<string, Task> action)
         {
-            //_logger.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
+            if (!IsConnected)
+            {
+                TryConnect();
+            }
 
-            TryConnect();
-        }
+            var _channel = CreateModel();
 
-        protected void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
-        {
-            //_logger.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
+            var queue = CreateQueueName(BROKER_NAME, queueDeclare);
 
-            TryConnect();
+            _channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+            var consumer = new AsyncEventingBasicConsumer(_channel);
+
+            consumer.Received += async (ch, ea) =>
+            {
+                var bytes = ea.Body.ToArray();
+
+                var body = IntegrationEvent.ToJson(bytes);
+
+                await action.Invoke(body);
+
+                _channel.BasicAck(ea.DeliveryTag, false);
+            };
+
+            _channel.BasicConsume(queue, autoAck: false, consumer: consumer);
+
+
+            return Task.CompletedTask;
         }
 
         public void Dispose()
@@ -87,5 +105,22 @@ namespace DiscoverAirline.CoreBroker
             _connectionFactory = null;
             _connection.Dispose();
         }
+
+        private IModel CreateModel()
+        {
+            if (!IsConnected)
+            {
+                TryConnect();
+            }
+
+            if (_channel == null)
+            {
+                _channel = _connection.CreateModel();
+            }
+
+            return _channel;
+        }
+
+        private string CreateQueueName(string brokerName, string eventName) => $"{brokerName}:{eventName}";
     }
 }
