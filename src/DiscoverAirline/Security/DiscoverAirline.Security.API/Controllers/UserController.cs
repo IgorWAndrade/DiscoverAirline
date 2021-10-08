@@ -1,12 +1,9 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.CoreBroker.Abstractions;
 using DiscoverAirline.Security.API.Core.Services;
 using DiscoverAirline.Security.API.Services.Dtos;
-using DiscoverAirline.Security.API.Services.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
@@ -14,15 +11,12 @@ namespace DiscoverAirline.Security.API.Controllers
     public class UserController : CoreController
     {
         private readonly IUserService _userService;
-        private readonly IAuthenticationService _authenticationService;
 
         public UserController(
             ILogger<UserController> logger,
-            IUserService userService,
-            IAuthenticationService authenticationService) : base(logger)
+            IUserService userService) : base(logger)
         {
             _userService = userService;
-            _authenticationService = authenticationService;
         }
 
 
@@ -61,13 +55,14 @@ namespace DiscoverAirline.Security.API.Controllers
         }
 
         [HttpPost("Refresh")]
+        [AllowAnonymous]
         public async Task<IActionResult> Refresh([FromBody] UserLoggedInRequest model)
         {
             if (!ModelState.IsValid)
             {
                 return CustomResponse(ModelState);
             }
-            return CustomResponse(await _authenticationService.RefreshAsync(model));
+            return CustomResponse(await _userService.ReLoginAsync(model));
         }
     }
 }

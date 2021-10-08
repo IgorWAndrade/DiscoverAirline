@@ -9,7 +9,7 @@
   "AllowedHosts": "*",
   "SecuritySettings": {
     "Secret": "MEUSEGREDOSUPERSECRETO",
-    "ExpirationInHours": 2,
+    "ExpirationInMinutes": 60,
     "Issuer": "DiscoverAirline",
     "Audience": "https://localhost"
   },

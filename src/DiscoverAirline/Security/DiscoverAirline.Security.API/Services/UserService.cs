@@ -51,7 +51,7 @@ namespace DiscoverAirline.Security.API.Services
                 await _eventBus.PublishAsync<UserCreatedEvent>("UserCreatedEvent", new UserCreatedEvent(user.Id, user.UserName, model.Address));
 
                 notification.SetMessage("Usuário criado com sucesso!");
-                notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));
+                notification.SetData(await _authenticationService.GenerateTokenAsync(user));
             }
             else
             {
@@ -80,8 +80,26 @@ namespace DiscoverAirline.Security.API.Services
 
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
                 notification.SetMessage("Usuário logado com sucesso!");
-                notification.SetData(await _authenticationService.GenerateTokenAsync(model.Email));
+                notification.SetData(await _authenticationService.GenerateTokenAsync(user));
+                return notification;
+            }
+
+            notification.AddError("Usuário ou Senha incorretos");
+
+            return notification;
+        }
+
+        public async Task<Notification> ReLoginAsync(UserLoggedInRequest model)
+        {
+            var notification = new Notification();
+            var result = await _authenticationService.RefreshTokenAsync(model);
+
+            if (result.Errors == null || result.Errors.Count == 0)
+            {
+                notification.SetData(result);
                 return notification;
             }
 

@@ -1,14 +1,16 @@
-﻿using DiscoverAirline.Core;
+﻿using DiscoverAirline.CoreAPI.Extensions;
 using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.Security.API.Core.Services;
 using DiscoverAirline.Security.API.Services.Dtos;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,76 +20,142 @@ namespace DiscoverAirline.Security.API.Services
     {
 
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SecurityDbContext _securityDbContext;
         private readonly SecuritySettings _securitySettings;
 
-        public AuthenticationService(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthenticationService(
+            IConfiguration configuration,
+            UserManager<IdentityUser> userManager,
+            SecurityDbContext securityDbContext)
         {
             _userManager = userManager;
+            _securityDbContext = securityDbContext;
             _securitySettings = configuration.GetSection("SecuritySettings").Get<SecuritySettings>();
         }
 
-
-
-        public async Task<Notification> RefreshAsync(UserLoggedInRequest model)
+        public async Task<UserDefaultResponse> GenerateTokenAsync(IdentityUser user)
         {
-            var notification = new Notification();
-
-            notification.SetMessage("Refresh in Building");
-
-            return await Task.FromResult(notification);
-        }
-
-        public async Task<UserDefaultResponse> GenerateTokenAsync(string email)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var user = await _userManager.FindByNameAsync(email);
-            var subject = await CreateSubject(user);
-            var key = Encoding.ASCII.GetBytes(_securitySettings.Secret);
-
-            var hoursExpiration = DateTime.UtcNow.AddHours(_securitySettings.ExpirationInHours);
-
-            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            try
             {
-                Issuer = _securitySettings.Issuer,
-                Audience = _securitySettings.Audience,
-                Subject = subject,
-                Expires = hoursExpiration,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            });
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var subject = await CreateSubject(user);
+                var key = Encoding.ASCII.GetBytes(_securitySettings.Secret);
 
-            var tokenStr = tokenHandler.WriteToken(token);
+                var minutesExpiration = DateTime.UtcNow.AddMinutes(_securitySettings.ExpirationInMinutes);
 
-            return new UserDefaultResponse
-            {
-                AccessToken = string.Format($"Bearer {tokenStr}"),
-                RefreshAccessToken = CreateRefreshToken(email),
-                Type_Acess = "Bearer",
-                ExpiresIn = hoursExpiration
-            };
-        }
+                var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+                {
+                    Issuer = _securitySettings.Issuer,
+                    Audience = _securitySettings.Audience,
+                    Subject = subject,
+                    Expires = minutesExpiration,
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                });
 
-        private RefreshToken CreateRefreshToken(string email)
-        {
-            var refreshToken = new RefreshToken
-            {
-                Username = email,
-                ExpirationDate = DateTime.UtcNow.AddHours(_securitySettings.ExpirationRefreshInHours)
-            };
+                var refreshToken = new RefreshToken()
+                {
+                    JwtId = token.Id,
+                    IsUsed = false,
+                    UserId = user.Id,
+                    AddedDate = DateTime.UtcNow,
+                    ExpiryDate = DateTime.UtcNow.AddDays(1),
+                    IsRevoked = false,
+                    Token = RandomString(25) + Guid.NewGuid()
+                };
 
-            string token;
-            var randomNumber = new byte[32];
+                var userToken = new UserToken
+                {
+                    Id = user.Id,
+                    //Claims = subject.Claims,
+                    Email = user.Email
+                };
 
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                token = Convert.ToBase64String(randomNumber);
+                await _securityDbContext.RefreshTokens.AddAsync(refreshToken);
+                await _securityDbContext.SaveChangesAsync();
+
+                var tokenStr = tokenHandler.WriteToken(token);
+
+                return new UserDefaultResponse
+                {
+                    UsuarioToken = userToken,
+                    Success = true,
+                    Token = string.Format($"Bearer {tokenStr}"),
+                    RefreshToken = refreshToken.Token,
+                    Type_Acess = "Bearer",
+                    ExpiresIn = minutesExpiration
+                };
             }
+            catch
+            {
+                return new UserDefaultResponse
+                {
+                    Success = false
+                };
+            }
+        }
 
-            refreshToken.Token = token.Replace("+", string.Empty)
-                .Replace("=", string.Empty)
-                .Replace("/", string.Empty);
+        public async Task<UserDefaultResponse> RefreshTokenAsync(UserLoggedInRequest tokenRequest)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var userResponse = new UserDefaultResponse();
 
-            return refreshToken;
+            try
+            {
+                var storedRefreshToken = await _securityDbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
+
+                if (storedRefreshToken == null)
+                {
+                    return new UserDefaultResponse()
+                    {
+                        Errors = new List<string>() { "refresh token doesnt exist" },
+                        Success = false
+                    };
+                }
+
+                // Check the date of the saved token if it has expired
+                if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
+                {
+                    return new UserDefaultResponse()
+                    {
+                        Errors = new List<string>() { "token has expired, user needs to relogin" },
+                        Success = false
+                    };
+                }
+
+                // check if the refresh token has been used
+                if (storedRefreshToken.IsUsed)
+                {
+                    return new UserDefaultResponse()
+                    {
+                        Errors = new List<string>() { "token has been used" },
+                        Success = false
+                    };
+                }
+
+                // Check if the token is revoked
+                if (storedRefreshToken.IsRevoked)
+                {
+                    return new UserDefaultResponse()
+                    {
+                        Errors = new List<string>() { "token has been revoked" },
+                        Success = false
+                    };
+                }
+
+                _securityDbContext.RefreshTokens.Update(storedRefreshToken);
+                await _securityDbContext.SaveChangesAsync();
+
+                var dbUser = await _userManager.FindByIdAsync(storedRefreshToken.UserId);
+                return await GenerateTokenAsync(dbUser);
+            }
+            catch (Exception ex)
+            {
+                return new UserDefaultResponse()
+                {
+                    Errors = new List<string>() { ex.Message },
+                    Success = false
+                };
+            }
         }
 
         private async Task<ClaimsIdentity> CreateSubject(IdentityUser user)
@@ -97,6 +165,7 @@ namespace DiscoverAirline.Security.API.Services
             var claims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
+            claims.Add(new Claim("Id", user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
             claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.Email));
@@ -115,5 +184,13 @@ namespace DiscoverAirline.Security.API.Services
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private string RandomString(int length)
+        {
+            var random = new Random();
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
     }
 }

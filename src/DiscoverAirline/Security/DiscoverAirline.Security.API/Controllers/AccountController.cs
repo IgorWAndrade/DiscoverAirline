@@ -1,4 +1,5 @@
 ﻿using DiscoverAirline.CoreAPI;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace DiscoverAirline.Security.API.Controllers
@@ -9,5 +10,10 @@ namespace DiscoverAirline.Security.API.Controllers
         {
         }
 
+        [HttpGet("GetAll")]
+        public IActionResult Get()
+        {
+            return Ok("User Logged");
+        }
     }
 }
