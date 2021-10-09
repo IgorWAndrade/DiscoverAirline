@@ -1,5 +1,5 @@
 ﻿using DiscoverAirline.CoreBroker.Events;
-using DiscoverAirline.Security.API.Services.Dtos;
+using DiscoverAirline.Security.API.Application.Dtos;
 using System.Text.Json.Serialization;
 
 namespace DiscoverAirline.Security.API.Services.Events

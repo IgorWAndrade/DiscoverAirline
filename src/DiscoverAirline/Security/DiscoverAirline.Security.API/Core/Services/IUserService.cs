@@ -1,5 +1,5 @@
 ﻿using DiscoverAirline.Core;
-using DiscoverAirline.Security.API.Services.Dtos;
+using DiscoverAirline.Security.API.Application.Dtos;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Core.Services

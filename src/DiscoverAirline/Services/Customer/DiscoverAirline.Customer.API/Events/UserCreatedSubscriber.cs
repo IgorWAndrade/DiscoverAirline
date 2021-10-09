@@ -1,10 +1,11 @@
 ﻿using DiscoverAirline.CoreBroker.Abstractions;
-using DiscoverAirline.Customer.API.Events.EventsIntegrations;
+using DiscoverAirline.CoreBroker.Events;
 using DiscoverAirline.Customer.API.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,5 +43,29 @@ namespace DiscoverAirline.Customer.API.Events.Subscribers
                 await context.AddCustomerAsync(customerAddressReceived);
             }
         }
+    }
+
+    class CustomerReceived : IntegrationEvent
+    {
+        [JsonInclude]
+        public string UserId { get; set; }
+        [JsonInclude]
+        public string UserName { get; set; }
+        [JsonInclude]
+        public CustomerAddress Address { get; set; }
+    }
+
+    class CustomerAddress
+    {
+        [JsonInclude]
+        public string Number { get; set; }
+        [JsonInclude]
+        public string Street { get; set; }
+        [JsonInclude]
+        public string District { get; set; }
+        [JsonInclude]
+        public string City { get; set; }
+        [JsonInclude]
+        public string ZipCode { get; set; }
     }
 }

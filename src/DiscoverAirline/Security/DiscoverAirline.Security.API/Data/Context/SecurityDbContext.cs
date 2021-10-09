@@ -1,8 +1,8 @@
-﻿using DiscoverAirline.Security.API.Services.Dtos;
+﻿using DiscoverAirline.Security.API.Application.Dtos;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DiscoverAirline.Security.API
+namespace DiscoverAirline.Security.API.Data.Context
 {
     public class SecurityDbContext : IdentityDbContext
     {

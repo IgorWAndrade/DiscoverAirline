@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DiscoverAirline.Security.API.Services.Dtos
+namespace DiscoverAirline.Security.API.Application.Dtos
 {
     public class UserDefaultResponse
     {

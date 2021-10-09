@@ -1,9 +1,9 @@
-﻿using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Models;
+﻿using DiscoverAirline.CoreAPI.Models;
 using DiscoverAirline.CoreAPI.Settings;
 using DiscoverAirline.CoreAPI.Utils;
+using DiscoverAirline.Security.API.Application.Dtos;
 using DiscoverAirline.Security.API.Core.Services;
-using DiscoverAirline.Security.API.Services.Dtos;
+using DiscoverAirline.Security.API.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Services

@@ -1,8 +1,7 @@
 ﻿using DiscoverAirline.Core;
-using DiscoverAirline.CoreBroker;
 using DiscoverAirline.CoreBroker.Abstractions;
+using DiscoverAirline.Security.API.Application.Dtos;
 using DiscoverAirline.Security.API.Core.Services;
-using DiscoverAirline.Security.API.Services.Dtos;
 using DiscoverAirline.Security.API.Services.Events;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;

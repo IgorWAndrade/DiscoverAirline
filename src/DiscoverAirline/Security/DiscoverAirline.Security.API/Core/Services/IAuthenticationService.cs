@@ -1,4 +1,4 @@
-﻿using DiscoverAirline.Security.API.Services.Dtos;
+﻿using DiscoverAirline.Security.API.Application.Dtos;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
