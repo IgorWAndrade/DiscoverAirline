@@ -31,10 +31,7 @@ namespace DiscoverAirline.CoreAPI.Extensions
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("FreeUse");
             }
-
-
             app.UseHttpsRedirection();
 
             app.UseRouting();

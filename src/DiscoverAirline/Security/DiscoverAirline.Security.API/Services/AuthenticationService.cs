@@ -1,5 +1,7 @@
 ﻿using DiscoverAirline.CoreAPI.Extensions;
+using DiscoverAirline.CoreAPI.Models;
 using DiscoverAirline.CoreAPI.Settings;
+using DiscoverAirline.CoreAPI.Utils;
 using DiscoverAirline.Security.API.Core.Services;
 using DiscoverAirline.Security.API.Services.Dtos;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Services
@@ -54,12 +57,9 @@ namespace DiscoverAirline.Security.API.Services
 
                 var refreshToken = new RefreshToken()
                 {
-                    JwtId = token.Id,
-                    IsUsed = false,
                     UserId = user.Id,
                     AddedDate = DateTime.UtcNow,
                     ExpiryDate = DateTime.UtcNow.AddDays(1),
-                    IsRevoked = false,
                     Token = RandomString(25) + Guid.NewGuid()
                 };
 
@@ -122,26 +122,6 @@ namespace DiscoverAirline.Security.API.Services
                     };
                 }
 
-                // check if the refresh token has been used
-                if (storedRefreshToken.IsUsed)
-                {
-                    return new UserDefaultResponse()
-                    {
-                        Errors = new List<string>() { "token has been used" },
-                        Success = false
-                    };
-                }
-
-                // Check if the token is revoked
-                if (storedRefreshToken.IsRevoked)
-                {
-                    return new UserDefaultResponse()
-                    {
-                        Errors = new List<string>() { "token has been revoked" },
-                        Success = false
-                    };
-                }
-
                 _securityDbContext.RefreshTokens.Update(storedRefreshToken);
                 await _securityDbContext.SaveChangesAsync();
 
@@ -161,25 +141,49 @@ namespace DiscoverAirline.Security.API.Services
         private async Task<ClaimsIdentity> CreateSubject(IdentityUser user)
         {
             var result = new ClaimsIdentity();
+            var profile = await GenerateProfileAsync(user);
 
-            var claims = await _userManager.GetClaimsAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            claims.Add(new Claim("Id", user.Id));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-            claims.Add(new Claim(JwtRegisteredClaimNames.UniqueName, user.Email));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim("Role", role));
-            }
-
-            result.AddClaims(claims);
+            result.AddClaim(new Claim("Id", user.Id));
+            result.AddClaim(new Claim("Security", CodificationUtil.Base64Encode(profile)));
+            result.AddClaim(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+            result.AddClaim(new Claim(JwtRegisteredClaimNames.UniqueName, user.Email));
+            result.AddClaim(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
+            result.AddClaim(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
 
             return result;
+        }
+
+        private async Task<UserProfile> GenerateProfileAsync(IdentityUser user)
+        {
+            var profile = new UserProfile
+            {
+                Id = user.Id,
+                Username = user.Email
+            };
+
+            var userRoles = await _securityDbContext.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
+
+            foreach (var item in userRoles)
+            {
+                var role = await _securityDbContext.Roles.FirstOrDefaultAsync(x => x.Id == item.RoleId);
+                var claims = _securityDbContext.RoleClaims.Where(x => x.RoleId == role.Id);
+
+                foreach (var claim in claims)
+                {
+                    profile.Permissions.Add(new UserProfileRoleClaims
+                    {
+                        RoleId = role.Id,
+                        RoleName = role.Name,
+                        Permissions = new UserProfileClaim
+                        {
+                            Controller = claim.ClaimType,
+                            Action = claim.ClaimValue
+                        }
+                    });
+                }
+            }
+
+            return profile;
         }
 
         private static long ToUnixEpochDate(DateTime date)

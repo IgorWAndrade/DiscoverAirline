@@ -13,20 +13,17 @@ namespace DiscoverAirline.Security.API.Services
     public class UserService : IUserService
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _rolerManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IAuthenticationService _authenticationService;
         private readonly IEventBus _eventBus;
 
         public UserService(
             UserManager<IdentityUser> userManager,
-            RoleManager<IdentityRole> rolerManager,
             SignInManager<IdentityUser> signInManager,
             IAuthenticationService authenticationService,
             IEventBus eventBus)
         {
             _userManager = userManager;
-            _rolerManager = rolerManager;
             _signInManager = signInManager;
             _authenticationService = authenticationService;
             _eventBus = eventBus;
