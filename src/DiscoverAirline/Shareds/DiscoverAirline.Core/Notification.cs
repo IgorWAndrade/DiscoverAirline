@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace DiscoverAirline.Core
                     });
             }
             return JsonConvert.SerializeObject(
-                    new 
+                    new
                     {
                         Errors = GetErrors()
                     });
@@ -48,6 +49,14 @@ namespace DiscoverAirline.Core
             return !GetErrors().Any();
         }
 
+        public static Notification Create(object data)
+        {
+            var result = new Notification();
+            result.SetData(data);
 
+            return result;
+        }
+
+        public static Notification Create() => new Notification();
     }
 }

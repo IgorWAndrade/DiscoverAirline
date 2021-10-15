@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreAPI\DiscoverAirline.CoreAPI.csproj" />
+    <ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreBroker\DiscoverAirline.CoreBroker.csproj" />
+    <ProjectReference Include="..\..\Shareds\DiscoverAirline.Core\DiscoverAirline.Core.csproj" />
+    <ProjectReference Include="..\DiscoverAirline.Security.Domain\DiscoverAirline.Security.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

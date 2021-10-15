@@ -5,8 +5,10 @@ namespace DiscoverAirline.Security.API.Controllers
 {
     public class ProfileController : CoreController
     {
-        public ProfileController(ILogger<CoreController> logger) : base(logger)
+        public ProfileController(
+            ILogger<ProfileController> logger) : base(logger)
         {
         }
+
     }
 }

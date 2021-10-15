@@ -4,21 +4,35 @@ namespace DiscoverAirline.CoreAPI.Models
 {
     public class UserProfile
     {
-        public string Id { get; set; }
-        public string Username { get; set; }
-        public List<UserProfileRoleClaims> Permissions { get; set; } = new List<UserProfileRoleClaims>();
+        public UserProfile(string name)
+        {
+            this.Name = name;
+        }
+
+        public string Name { get; set; }
+        public List<ServiceProfile> Services { get; set; } = new List<ServiceProfile>();
+
+
+    }
+    public class ServiceProfile
+    {
+        public ServiceProfile(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; set; }
+        public List<ControllerProfile> Controllers { get; set; } = new List<ControllerProfile>();
     }
 
-    public class UserProfileRoleClaims
+    public class ControllerProfile
     {
-        public string RoleId { get; set; }
-        public string RoleName { get; set; }
-        public UserProfileClaim Permissions { get; set; }
-    }
+        public ControllerProfile(string name)
+        {
+            Name = name;
+        }
 
-    public class UserProfileClaim
-    {
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        public string Name { get; set; }
+        public List<string> Actions { get; set; } = new List<string>();
     }
 }

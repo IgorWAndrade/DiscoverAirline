@@ -16,15 +16,15 @@ namespace DiscoverAirline.CoreAPI.Attribute
         /// <param name="controller"></param>
         /// <param name="role"></param>
         /// <param name="action"></param>
-        public AuthorizationCustomAttribute(string role, string controller, string action) : base(typeof(AuthorizationCustomFilter))
+        public AuthorizationCustomAttribute(string service, string controller, string action) : base(typeof(AuthorizationCustomFilter))
         {
             var profileJson = new ProfileAuthorization
             {
                 Controller = controller,
-                Role = role,
+                Service = service,
                 Action = action
             };
-            Arguments = new object[] { new Claim(role, JsonConvert.SerializeObject(profileJson)) };
+            Arguments = new object[] { new Claim(profileJson.Service, JsonConvert.SerializeObject(profileJson)) };
         }
     }
 
@@ -53,14 +53,14 @@ namespace DiscoverAirline.CoreAPI.Attribute
 
         private void IsAuthorize(Models.UserProfile profile, AuthorizationFilterContext context)
         {
-            var role = profile.Permissions.Where(x => x.RoleName == _claim.Type).ToList();
-            if (role != null)
+            var service = profile.Services.FirstOrDefault(x => x.Name == _claim.Type);
+            if (service != null)
             {
                 var permission = JsonConvert.DeserializeObject<ProfileAuthorization>(_claim.Value);
                 var validated = false;
-                foreach (var item in role)
+                foreach (var controller in service.Controllers)
                 {
-                    if (item.Permissions.Controller == permission.Controller && item.Permissions.Action == permission.Action)
+                    if (controller.Name == permission.Controller && controller.Actions.Any(x => x.Equals(permission.Action)))
                     {
                         validated = true;
                     }
@@ -80,7 +80,7 @@ namespace DiscoverAirline.CoreAPI.Attribute
 
     internal class ProfileAuthorization
     {
-        public string Role { get; set; }
+        public string Service { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
     }
