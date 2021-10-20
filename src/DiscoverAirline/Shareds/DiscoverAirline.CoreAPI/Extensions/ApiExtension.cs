@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DiscoverAirline.CoreAPI.Attribute;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,10 @@ namespace DiscoverAirline.CoreAPI.Extensions
         {
             services.AddSecurityServices(configuration);
 
-            services.AddControllers();
+            services.AddControllers(opt =>
+            {
+                opt.Filters.Add(typeof(ValidateModelStateAttribute));
+            });
 
             services.AddHealthCheckServices(configuration);
 

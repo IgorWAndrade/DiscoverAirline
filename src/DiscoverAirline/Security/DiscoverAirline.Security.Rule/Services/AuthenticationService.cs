@@ -3,7 +3,6 @@ using DiscoverAirline.Security.Domain.Entities;
 using DiscoverAirline.Security.Domain.Interfaces.Repositories;
 using DiscoverAirline.Security.Domain.Interfaces.Services;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.Rule.Services
@@ -34,16 +33,25 @@ namespace DiscoverAirline.Security.Rule.Services
 
         public async Task<Notification> LoginAsync(object userRequest)
         {
-            var userClass = User.ToLoginFromClass(userRequest);
-            var userRepo = await _repositorio.FirstAsync(x => x.PasswordHash == userClass.PasswordHash && x.Email == userClass.Email);
-            return await LoginLocalAsync(userRepo.Email, userClass.Password);
+            try
+            {
+                var userClass = User.ToLoginFromClass(userRequest);
+                var userRepo = await _repositorio.FirstAsync(x => x.PasswordHash == userClass.PasswordHash && x.Email == userClass.Email);
+                return await LoginLocalAsync(userRepo.Email, userClass.Password);
+            }
+            catch (Exception ex)
+            {
+                return Notification.Create(ex);
+            }
         }
 
-        public async Task LogoutAsync(string name)
+        public async Task<Notification> LogoutAsync(string name)
         {
             var user = await _repositorio.FirstAsync(x => x.Email == name);
             var storedRefreshToken = await _userRefreshTokenRepository.FirstAsync(x => x.UserId == user.Id);
             await _userRefreshTokenRepository.DeleteAsync(storedRefreshToken.Id);
+
+            return Notification.Create();
         }
 
         public async Task<Notification> RefreshTokenAsync(string userRefresh)
@@ -55,10 +63,10 @@ namespace DiscoverAirline.Security.Rule.Services
             return await LoginLocalAsync(userRepo.Email, User.ToPasswordString(userRepo.PasswordHash));
         }
 
-        protected async Task<Notification> LoginLocalAsync(string userName, string userPassword)
+        private async Task<Notification> LoginLocalAsync(string userName, string userPassword)
         {
-            var user = await _userService.LoginAsync(userName, userPassword);
-            var token = await _tokenService.GenerateTokenAsync(user);
+            var userNotification = await _userService.LoginAsync(userName, userPassword);
+            var token = await _tokenService.GenerateTokenAsync(userNotification.GetData() as User);
 
             return Notification.Create(token);
         }

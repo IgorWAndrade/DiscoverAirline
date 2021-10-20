@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DiscoverAirline.Security.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DiscoverAirline.Security.Rule.Data.Mappings
@@ -15,6 +16,9 @@ namespace DiscoverAirline.Security.Rule.Data.Mappings
                 .HasColumnName("Name")
                 .HasMaxLength(64)
                 .IsRequired();
+
+            builder.HasMany<Authorization>(x => x.Authorizations)
+                .WithMany(x => x.Actions);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.Security.API.Models.Entities.ValueObjects;
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -16,7 +15,9 @@ namespace DiscoverAirline.Security.Domain.Entities
 
         public string PasswordHash { get; set; }
 
-        public virtual Profile Profile { get; set; }
+        public int? RoleId { get; set; }
+
+        public virtual Role Role { get; set; }
 
         public virtual UserRefreshToken Token { get; set; }
 

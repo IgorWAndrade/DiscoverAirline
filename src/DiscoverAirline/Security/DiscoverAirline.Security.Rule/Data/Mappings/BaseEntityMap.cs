@@ -21,6 +21,15 @@ namespace DiscoverAirline.Security.Rule.Data.Mappings
                  .HasColumnName("CreatedDate")
                  .HasColumnType("datetime")
                  .IsRequired();
+
+            builder.Property(x => x.UpdateDate)
+                 .HasColumnName("UpdateDate")
+                 .HasColumnType("datetime"); ;
+
+            builder.Property(x => x.Active)
+                 .HasColumnName("Active")
+                .HasDefaultValue(true)
+                 .IsRequired();
         }
     }
 }

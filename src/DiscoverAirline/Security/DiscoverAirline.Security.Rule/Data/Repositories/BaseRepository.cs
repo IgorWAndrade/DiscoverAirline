@@ -22,6 +22,7 @@ namespace DiscoverAirline.Security.Rule.Data.Repositories
 
         public async Task<T> AddAsync(T entidade)
         {
+            entidade.PrepareToAdd();
             await _context.StartTransactionAsync();
             await _dbSet.AddAsync(entidade);
             await _context.SaveChangesCommitAsync();
@@ -30,6 +31,7 @@ namespace DiscoverAirline.Security.Rule.Data.Repositories
 
         public async Task<T> UpdateAsync(T entidade)
         {
+            entidade.PrepareToUpdate();
             await _context.StartTransactionAsync();
             _dbSet.Attach(entidade);
             _context.Entry(entidade).State = EntityState.Modified;
@@ -44,8 +46,10 @@ namespace DiscoverAirline.Security.Rule.Data.Repositories
                 var entidade = await GetByIdAsync(id);
                 if (entidade != null)
                 {
+                    entidade.PrepareToDelete();
                     await _context.StartTransactionAsync();
-                    _dbSet.Remove(entidade);
+                    _dbSet.Attach(entidade);
+                    _context.Entry(entidade).State = EntityState.Modified;
                     await _context.SaveChangesCommitAsync();
                 }
                 return true;
@@ -56,9 +60,9 @@ namespace DiscoverAirline.Security.Rule.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAsync() => await _dbSet.ToListAsync();
+        public async Task<IEnumerable<T>> GetAsync() => await _dbSet.Where(x => x.Active).ToListAsync();
 
-        public async Task<T> GetByIdAsync(int id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<T> GetByIdAsync(int id) => await _dbSet.FirstOrDefaultAsync(x => x.Id == id && x.Active);
 
         public async Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> expression) => await _dbSet.Where(expression).ToListAsync();
 

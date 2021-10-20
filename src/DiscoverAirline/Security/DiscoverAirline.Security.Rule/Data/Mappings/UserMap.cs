@@ -27,9 +27,17 @@ namespace DiscoverAirline.Security.Rule.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(64);
 
+            builder.Property(x => x.RoleId)
+                .HasColumnName("RoleId")
+                .IsRequired(false);
+
             builder.Ignore(x => x.Address);
 
             builder.Ignore(x => x.Password);
+
+            builder.HasOne<Role>(x => x.Role)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.RoleId);
         }
     }
 }

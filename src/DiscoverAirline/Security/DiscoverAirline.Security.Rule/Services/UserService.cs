@@ -1,4 +1,5 @@
-﻿using DiscoverAirline.Security.Domain.Entities;
+﻿using DiscoverAirline.Core;
+using DiscoverAirline.Security.Domain.Entities;
 using DiscoverAirline.Security.Domain.Interfaces.Repositories;
 using DiscoverAirline.Security.Domain.Interfaces.Services;
 using System.Threading.Tasks;
@@ -7,16 +8,19 @@ namespace DiscoverAirline.Security.Rule.Services
 {
     public class UserService : BaseService<User>, IUserService
     {
-        private readonly IBaseRepository<Profile> _profileRepository;
+        private readonly IUserRepository _userRepository;
 
         public UserService(
-            IBaseRepository<User> repositorio,
-            IBaseRepository<Profile> profileRepository) : base(repositorio)
+            IUserRepository userRepository) : base(userRepository)
         {
-            _profileRepository = profileRepository;
+            _userRepository = userRepository;
         }
+        public async Task<Notification> GetFullAsync(string userName)
+        {
+            return Notification.Create(await _userRepository.GetFullAsync(userName));
+        } 
 
-        public async Task<User> AddAsync(object userRequest)
+        public async Task<Notification> AddAsync(object userRequest)
         {
             var user = User.ToRegisterFromClass(userRequest);
             var valid = User.Valid(user);
@@ -24,22 +28,19 @@ namespace DiscoverAirline.Security.Rule.Services
 
             if (valid && !existsUser)
             {
-                var userRepo = await _repositorio.AddAsync(user);
-                await _profileRepository.AddAsync(new Profile
-                {
-                    UserId = userRepo.Id
-                });
+                var userRepo = await _userRepository.AddAsync(user);
 
-                return userRepo;
+                return Notification.Create(userRepo);
             }
             else
                 return null;
         }
 
-        public async Task<User> LoginAsync(string userName, string userPassword)
+        public async Task<Notification> LoginAsync(string userName, string userPassword)
         {
             var hash = User.ToPasswordHash(userPassword);
-            return await _repositorio.FirstAsync(x => x.Email.Equals(userName) && x.PasswordHash.Equals(hash));
+            return Notification.Create(await _repositorio.FirstAsync(x => x.Email.Equals(userName) && x.PasswordHash.Equals(hash)));
         }
+
     }
 }

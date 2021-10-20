@@ -19,12 +19,30 @@ namespace DiscoverAirline.Security.Rule.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ActionAuthorization", b =>
+                {
+                    b.Property<int>("ActionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AuthorizationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActionsId", "AuthorizationsId");
+
+                    b.HasIndex("AuthorizationsId");
+
+                    b.ToTable("ActionAuthorization");
+                });
+
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Action", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -35,9 +53,48 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Name");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Actions");
+                });
+
+            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Authorization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ControllerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ControllerId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("Authorizations");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Controller", b =>
@@ -47,6 +104,9 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -56,67 +116,12 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Name");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Controllers");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ControllerActions", b =>
-                {
-                    b.Property<int>("ActionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ControllerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ActionId", "ControllerId");
-
-                    b.HasIndex("ControllerId");
-
-                    b.ToTable("ControllerActions");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Profile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ProfileRoles", b =>
-                {
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ProfileId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("ProfileRoles");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Role", b =>
@@ -126,6 +131,16 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("BusinessName")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)")
+                        .HasDefaultValue("")
+                        .HasColumnName("BusinessName");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -135,27 +150,12 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Name");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.RoleServices", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("RoleId", "ServiceId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("RoleServices");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Service", b =>
@@ -165,6 +165,9 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -174,27 +177,12 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Name");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Services");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ServiceControllers", b =>
-                {
-                    b.Property<int>("ControllerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ControllerId", "ServiceId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("ServiceControllers");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.User", b =>
@@ -203,6 +191,9 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
@@ -225,7 +216,16 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasColumnName("Password");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int")
+                        .HasColumnName("RoleId");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -236,6 +236,9 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -250,6 +253,9 @@ namespace DiscoverAirline.Security.Rule.Migrations
                         .HasColumnType("nvarchar(144)")
                         .HasColumnName("Code");
 
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int")
                         .HasColumnName("UserId");
@@ -262,91 +268,55 @@ namespace DiscoverAirline.Security.Rule.Migrations
                     b.ToTable("Tokens");
                 });
 
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ControllerActions", b =>
+            modelBuilder.Entity("ActionAuthorization", b =>
                 {
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Action", "Action")
-                        .WithMany("Controllers")
-                        .HasForeignKey("ActionId")
+                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Action", null)
+                        .WithMany()
+                        .HasForeignKey("ActionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Authorization", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorizationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Authorization", b =>
+                {
                     b.HasOne("DiscoverAirline.Security.Domain.Entities.Controller", "Controller")
-                        .WithMany("Actions")
+                        .WithMany("Authorizations")
                         .HasForeignKey("ControllerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Action");
-
-                    b.Navigation("Controller");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Profile", b =>
-                {
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.User", "User")
-                        .WithOne("Profile")
-                        .HasForeignKey("DiscoverAirline.Security.Domain.Entities.Profile", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ProfileRoles", b =>
-                {
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Profile", "Profile")
-                        .WithMany("Roles")
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DiscoverAirline.Security.Domain.Entities.Role", "Role")
-                        .WithMany("Profiles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profile");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.RoleServices", b =>
-                {
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Role", "Role")
-                        .WithMany("Services")
+                        .WithMany("Authorizations")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DiscoverAirline.Security.Domain.Entities.Service", "Service")
-                        .WithMany("Roles")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.ServiceControllers", b =>
-                {
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Controller", "Controller")
-                        .WithMany("Services")
-                        .HasForeignKey("ControllerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Service", "Service")
-                        .WithMany("Controllers")
+                        .WithMany("Authorizations")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Controller");
 
+                    b.Navigation("Role");
+
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.User", b =>
+                {
+                    b.HasOne("DiscoverAirline.Security.Domain.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.UserRefreshToken", b =>
@@ -360,41 +330,25 @@ namespace DiscoverAirline.Security.Rule.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Action", b =>
-                {
-                    b.Navigation("Controllers");
-                });
-
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Controller", b =>
                 {
-                    b.Navigation("Actions");
-
-                    b.Navigation("Services");
-                });
-
-            modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Profile", b =>
-                {
-                    b.Navigation("Roles");
+                    b.Navigation("Authorizations");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Role", b =>
                 {
-                    b.Navigation("Profiles");
+                    b.Navigation("Authorizations");
 
-                    b.Navigation("Services");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.Service", b =>
                 {
-                    b.Navigation("Controllers");
-
-                    b.Navigation("Roles");
+                    b.Navigation("Authorizations");
                 });
 
             modelBuilder.Entity("DiscoverAirline.Security.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Profile");
-
                     b.Navigation("Token");
                 });
 #pragma warning restore 612, 618

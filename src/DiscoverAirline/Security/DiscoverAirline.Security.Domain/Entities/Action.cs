@@ -6,7 +6,6 @@ namespace DiscoverAirline.Security.Domain.Entities
     public class Action : BaseEntity
     {
         public string Name { get; set; }
-
-        public virtual List<ControllerActions> Controllers { get; set; }
+        public virtual List<Authorization> Authorizations { get; set; } = new List<Authorization>();
     }
 }

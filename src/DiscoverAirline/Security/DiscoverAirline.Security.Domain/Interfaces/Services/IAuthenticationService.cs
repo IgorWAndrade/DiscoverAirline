@@ -7,7 +7,7 @@ namespace DiscoverAirline.Security.Domain.Interfaces.Services
     {
         Task<Notification> RegisterAsync(object model);
         Task<Notification> LoginAsync(object user);
-        Task LogoutAsync(string name);
+        Task<Notification> LogoutAsync(string name);
         Task<Notification> RefreshTokenAsync(string userRefresh);
     }
 }

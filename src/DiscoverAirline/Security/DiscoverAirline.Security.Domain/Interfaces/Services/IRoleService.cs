@@ -7,5 +7,8 @@ namespace DiscoverAirline.Security.Domain.Interfaces.Services
     {
         Task<Notification> GetAsync();
         Task<Notification> AddAsync(object model);
+        Task<Notification> UpdateAsync(object model);
+        Task<Notification> DeleteAsync(int id);
+
     }
 }

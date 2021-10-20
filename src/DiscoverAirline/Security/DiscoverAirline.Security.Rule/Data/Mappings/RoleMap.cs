@@ -17,6 +17,16 @@ namespace DiscoverAirline.Security.Rule.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(64);
 
+            builder.Property(x => x.BusinessName)
+                .HasColumnName("BusinessName")
+                .HasDefaultValue("")
+                .IsRequired(false)
+                .HasMaxLength(64);
+
+            builder.HasMany<Authorization>(x => x.Authorizations)
+                .WithOne(x => x.Role)
+                .HasForeignKey(x => x.RoleId);
+
         }
     }
 }

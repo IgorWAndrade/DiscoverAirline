@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiscoverAirline.Security.Rule.Applications.Response
+namespace DiscoverAirline.Security.Rule.Applications.Response.User
 {
     public class UserDefaultResponse
     {

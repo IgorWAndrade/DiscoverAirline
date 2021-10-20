@@ -15,7 +15,7 @@ namespace DiscoverAirline.CoreAPI
     {
         protected readonly ILogger<CoreController> Logger;
         protected Notification Notification = new Notification();
-
+        
         public CoreController(ILogger<CoreController> logger)
         {
             this.Logger = logger;

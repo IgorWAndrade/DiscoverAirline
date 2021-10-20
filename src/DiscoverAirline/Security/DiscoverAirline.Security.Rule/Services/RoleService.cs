@@ -18,16 +18,22 @@ namespace DiscoverAirline.Security.Rule.Services
 
         public async Task<Notification> AddAsync(object model)
         {
-            var domain = Role.ToCreatedFromClass(model);
+            var domain =  Role.ToCreatedFromClass(model);
             await _roleRepository.AddAsync(domain);
 
             return Notification.Create(domain.Id);
         }
-
-        public async Task<Notification> GetAsync()
+        public Task<Notification> UpdateAsync(object model)
         {
-            var roles = await _roleRepository.GetAsync();
-            return Notification.Create(roles.Select(x => x.Name));
+            throw new System.NotImplementedException();
         }
+
+        public Task<Notification> DeleteAsync(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<Notification> GetAsync() => Notification.Create(await _roleRepository.GetAsync());
+
     }
 }

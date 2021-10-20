@@ -1,6 +1,6 @@
 ﻿using DiscoverAirline.CoreAPI;
 using DiscoverAirline.Security.Domain.Interfaces.Services;
-using DiscoverAirline.Security.Rule.Applications.Request;
+using DiscoverAirline.Security.Rule.Applications.Request.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,48 +21,17 @@ namespace DiscoverAirline.Security.API.Controllers
 
         [HttpPost("Signup")]
         [AllowAnonymous]
-        public async Task<IActionResult> Signup([FromBody] UserRegisterRequest model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return CustomResponse(ModelState);
-            }
-
-            return CustomResponse(await _authenticationService.RegisterAsync(model));
-        }
+        public async Task<IActionResult> Signup([FromBody] UserRegisterRequest model) => CustomResponse(await _authenticationService.RegisterAsync(model));
 
         [HttpPost("Signin")]
         [AllowAnonymous]
-        public async Task<IActionResult> Signin([FromBody] UserLoginRequest model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return CustomResponse(ModelState);
-            }
-
-            return CustomResponse(await _authenticationService.LoginAsync(model));
-        }
+        public async Task<IActionResult> Signin([FromBody] UserLoginRequest model) => CustomResponse(await _authenticationService.LoginAsync(model));
 
         [HttpPost("Signout")]
-        public async Task<IActionResult> Signout()
-        {
-            await _authenticationService.LogoutAsync(HttpContext.User.Identity.Name);
-
-            return CustomResponse();
-        }
+        public async Task<IActionResult> Signout() => CustomResponse(await _authenticationService.LogoutAsync(HttpContext.User.Identity.Name));
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh([FromBody] string refreshToken)
-        {
-            if (!ModelState.IsValid)
-            {
-                Notification.AddError("Usuario ou Senha invalidos!");
-                return CustomResponse();
-            }
-
-            return CustomResponse(await _authenticationService.RefreshTokenAsync(refreshToken));
-
-        }
+        public async Task<IActionResult> Refresh([FromBody] string refreshToken) => CustomResponse(await _authenticationService.RefreshTokenAsync(refreshToken));
 
     }
 }

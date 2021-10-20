@@ -100,31 +100,12 @@ namespace DiscoverAirline.Security.Rule.Services
         {
             var profileSecurity = new ProfileSecurity(user.Email);
 
-            var profile = await _securityContext.Profiles.FirstOrDefaultAsync(x => x.UserId == user.Id);
-
-            var roles = await _securityContext.Roles.Where(x => x.Profiles.Any(p => p.ProfileId == profile.Id)).ToListAsync();
-            foreach (var role in roles)
+            if(user.RoleId.HasValue)
             {
-                var services = await _securityContext.Services.Where(x => x.Roles.Any(r => r.RoleId == role.Id)).ToListAsync();
-                foreach (var service in services)
+                var auths = _securityContext.Authorizations.Where(x => x.RoleId == user.RoleId);
+                foreach (var item in auths)
                 {
-                    var serviceSecurity = new ServiceSecurity(service.Name);
-                    var controllers = await _securityContext.Controllers.Where(x => x.Services.Any(r => r.ServiceId == service.Id)).ToListAsync();
-                    foreach (var controller in controllers)
-                    {
-                        var controllerSecurity = new ControllerSecurity(controller.Name);
-                        var actions = await _securityContext.Actions.Where(x => x.Controllers.Any(r => r.ControllerId == controller.Id)).ToListAsync();
-                        foreach (var action in actions)
-                        {
-                            controllerSecurity.Actions.Add(action.Name);
-                        }
-                        serviceSecurity.Controllers.Add(controllerSecurity);
-                    }
-
-                    if (serviceSecurity.Controllers.Any())
-                    {
-                        profileSecurity.Services.Add(serviceSecurity);
-                    }
+                    //item.
                 }
             }
 

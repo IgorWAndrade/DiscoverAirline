@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DiscoverAirline.Security.Rule.Applications.Request
+namespace DiscoverAirline.Security.Rule.Applications.Request.User
 {
     public class UserRegisterRequest
     {
