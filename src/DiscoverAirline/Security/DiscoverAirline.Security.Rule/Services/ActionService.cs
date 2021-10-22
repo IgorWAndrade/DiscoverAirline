@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.Rule.Services
 {
-    public class ActService : IActService
+    public class ActionService : IActionService
     {
         private readonly IBaseRepository<DiscoverAirline.Security.Domain.Entities.Action> _repository;
 
-        public ActService(IBaseRepository<DiscoverAirline.Security.Domain.Entities.Action> repository)
+        public ActionService(IBaseRepository<DiscoverAirline.Security.Domain.Entities.Action> repository)
         {
             _repository = repository;
         }

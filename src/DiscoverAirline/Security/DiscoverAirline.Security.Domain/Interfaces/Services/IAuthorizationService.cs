@@ -6,6 +6,6 @@ namespace DiscoverAirline.Security.Domain.Interfaces.Services
     public interface IAuthorizationService
     {
         Task<Notification> ManagementToAuthorizations(object auth);
-        Task<Notification> ManagementToUsers(object model);
+        Task<Notification> ManagementsToAuthorizations(object auth);
     }
 }

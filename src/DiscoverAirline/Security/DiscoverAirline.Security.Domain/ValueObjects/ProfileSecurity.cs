@@ -16,22 +16,25 @@ namespace DiscoverAirline.Security.Domain.ValueObjects
     }
     public class ServiceSecurity
     {
-        public ServiceSecurity(string name)
+        public ServiceSecurity(int id,string name)
         {
+            Id = id;
             Name = name;
         }
 
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<ControllerSecurity> Controllers { get; set; } = new List<ControllerSecurity>();
     }
 
     public class ControllerSecurity
     {
-        public ControllerSecurity(string name)
+        public ControllerSecurity(int id, string name)
         {
+            Id = id;
             Name = name;
         }
-
+        public int Id { get; set; }
         public string Name { get; set; }
         public List<string> Actions { get; set; } = new List<string>();
     }

@@ -39,7 +39,7 @@ namespace DiscoverAirline.Security.Rule.Services
         public async Task<Notification> LoginAsync(string userName, string userPassword)
         {
             var hash = User.ToPasswordHash(userPassword);
-            return Notification.Create(await _repositorio.FirstAsync(x => x.Email.Equals(userName) && x.PasswordHash.Equals(hash)));
+            return Notification.Create(await _userRepository.FirstFullAsync(x => x.Email.Equals(userName) && x.PasswordHash.Equals(hash)));
         }
 
     }

@@ -16,13 +16,13 @@ namespace DiscoverAirline.Security.Rule.Data.Mappings
                 .WithMany(x => x.Authorizations)
                 .HasForeignKey(x => x.RoleId);
 
-            builder.HasOne<Service>(x => x.Service)
+            builder.HasOne<Application>(x => x.Application)
                 .WithMany(x => x.Authorizations)
-                .HasForeignKey(x => x.ServiceId);
+                .HasForeignKey(x => x.ApplicationId);
 
-            builder.HasOne<Controller>(x => x.Controller)
+            builder.HasOne<Access>(x => x.Access)
                 .WithMany(x => x.Authorizations)
-                .HasForeignKey(x => x.ControllerId);
+                .HasForeignKey(x => x.AccessId);
 
             builder.HasMany<Action>(x => x.Actions)
                 .WithMany(x => x.Authorizations);

@@ -9,13 +9,5 @@ namespace DiscoverAirline.Security.Domain.Entities
         public string BusinessName { get; set; }
         public virtual List<User> Users { get; set; }
         public virtual List<Authorization> Authorizations { get; set; }
-        public static Role ToCreatedFromClass(dynamic model)
-        {
-            return new Role
-            {
-                Name = model.Name,
-                BusinessName = model.BusinessName
-            };
-        }
     }
 }

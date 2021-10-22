@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
 {
-    public class ActController : CoreController
+    public class ActionController : CoreController
     {
-        private readonly IActService _service;
+        private readonly IActionService _service;
 
-        public ActController(
+        public ActionController(
             ILogger<CoreController> logger,
-            IActService service) : base(logger)
+            IActionService service) : base(logger)
         {
             _service = service;
         }
 
 
         [HttpGet("Actions")]
-        [AuthorizationCustom("Security", "AuthorizationController", "Get")]
+        [AuthorizationCustom("Security", "ActionController", "Get")]
         public async Task<IActionResult> Get() => CustomResponse(await _service.GetAsync());
 
     }

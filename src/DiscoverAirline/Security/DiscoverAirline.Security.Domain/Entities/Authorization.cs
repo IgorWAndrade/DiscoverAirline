@@ -7,10 +7,10 @@ namespace DiscoverAirline.Security.Domain.Entities
     {
         public int RoleId { get; set; }
         public virtual Role Role { get; set; }
-        public int ServiceId { get; set; }
-        public virtual Service Service { get; set; }
-        public int ControllerId { get; set; }
-        public virtual Controller Controller { get; set; }
+        public int ApplicationId { get; set; }
+        public virtual Application Application { get; set; }
+        public int AccessId { get; set; }
+        public virtual Access Access { get; set; }
         public virtual List<Action> Actions { get; set; }
     }
 

@@ -13,8 +13,8 @@ namespace DiscoverAirline.Security.Rule.Data
         protected SecurityContext _securityContext { get; set; }
 
         public virtual DbSet<Domain.Entities.Action> Actions { get; set; }
-        public virtual DbSet<Controller> Controllers { get; set; }
-        public virtual DbSet<Service> Services { get; set; }
+        public virtual DbSet<Access> Access { get; set; }
+        public virtual DbSet<Application> Applications { get; set; }
         public virtual DbSet<Authorization> Authorizations { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -42,10 +42,10 @@ namespace DiscoverAirline.Security.Rule.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ActionMap());
-            modelBuilder.ApplyConfiguration(new ControllerMap());
+            modelBuilder.ApplyConfiguration(new AccessMap());
             modelBuilder.ApplyConfiguration(new RoleMap());
             modelBuilder.ApplyConfiguration(new AuthorizationMap());
-            modelBuilder.ApplyConfiguration(new ServiceMap());
+            modelBuilder.ApplyConfiguration(new ApplicationMap());
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new UserRefreshTokenMap());
 

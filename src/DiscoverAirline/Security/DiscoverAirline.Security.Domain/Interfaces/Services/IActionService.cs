@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.Domain.Interfaces.Services
 {
-    public interface IActService
+    public interface IActionService
     {
         Task<Notification> GetAsync();
-
     }
 }

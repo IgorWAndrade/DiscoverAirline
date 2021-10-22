@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DiscoverAirline.Security.Rule.Applications.Request.AuthorizationManager.Actions
+namespace DiscoverAirline.Security.Rule.Applications.Request.Actions
 {
     public class ActionRequest
     {

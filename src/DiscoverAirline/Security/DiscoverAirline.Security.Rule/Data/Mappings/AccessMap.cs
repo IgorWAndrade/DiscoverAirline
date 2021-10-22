@@ -4,23 +4,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DiscoverAirline.Security.Rule.Data.Mappings
 {
-    class ServiceMap : IEntityTypeConfiguration<Service>
+    class AccessMap : IEntityTypeConfiguration<Access>
     {
-        public void Configure(EntityTypeBuilder<Service> builder)
+        public void Configure(EntityTypeBuilder<Access> builder)
         {
-            builder.ToTable("Services");
+            builder.ToTable("Access");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .IsRequired()
-                .HasMaxLength(64);
+                .HasMaxLength(64)
+                .IsRequired();
 
             builder.HasMany<Authorization>(x => x.Authorizations)
-                .WithOne(x => x.Service)
-                .HasForeignKey(x => x.ServiceId);
-
+                .WithOne(x => x.Access)
+                .HasForeignKey(x => x.AccessId);
         }
     }
 }

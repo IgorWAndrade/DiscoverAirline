@@ -18,9 +18,9 @@ namespace DiscoverAirline.Security.API.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<ISrcService, SrcService>();
-            services.AddScoped<ICtrService, CtrService>();
-            services.AddScoped<IActService, ActService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<IAccessService, AccessService>();
+            services.AddScoped<IActionService, ActionService>();
 
             //Repositories
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

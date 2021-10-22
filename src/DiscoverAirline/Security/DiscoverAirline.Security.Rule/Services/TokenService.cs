@@ -100,16 +100,51 @@ namespace DiscoverAirline.Security.Rule.Services
         {
             var profileSecurity = new ProfileSecurity(user.Email);
 
-            if(user.RoleId.HasValue)
+            if (user.RoleId.HasValue)
             {
-                var auths = _securityContext.Authorizations.Where(x => x.RoleId == user.RoleId);
-                foreach (var item in auths)
+                profileSecurity.Name = user.Role.Name;
+
+                var auths = await _securityContext.Authorizations
+                    .Include(x => x.Application)
+                    .Include(x => x.Access)
+                    .Include(x => x.Actions)
+                    .Where(x => x.RoleId == user.RoleId).ToListAsync();
+
+                foreach (var auth in auths)
                 {
-                    //item.
+                    SetProfile(auth, profileSecurity);
                 }
             }
 
             return CodificationUtil.Base64Encode(profileSecurity);
+        }
+
+        private void SetProfile(Authorization auth, ProfileSecurity profileSecurity)
+        {
+            var service = profileSecurity.Services.FirstOrDefault(x => x.Id == auth.ApplicationId);
+
+            if (service == null)
+            {
+                var serviceNew = new ServiceSecurity(auth.Application.Id, auth.Application.Name);
+                var controller = new ControllerSecurity(auth.Access.Id, auth.Access.Name);
+                var actions = auth.Actions;
+
+                controller.Actions.AddRange(actions.Select(x => x.Name).ToList());
+                serviceNew.Controllers.Add(controller);
+
+                profileSecurity.Services.Add(serviceNew);
+            }
+            else
+            {
+                var controller = new ControllerSecurity(auth.Access.Id, auth.Access.Name);
+                var actions = auth.Actions;
+
+                controller.Actions.AddRange(actions.Select(x => x.Name).ToList());
+                service.Controllers.Add(controller);
+
+                profileSecurity.Services.Remove(service);
+                profileSecurity.Services.Add(service);
+            }
         }
 
         private UserRefreshToken CreateTokenRefresh(User user)

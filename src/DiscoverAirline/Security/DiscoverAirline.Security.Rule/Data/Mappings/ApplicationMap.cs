@@ -4,22 +4,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DiscoverAirline.Security.Rule.Data.Mappings
 {
-    class ControllerMap : IEntityTypeConfiguration<Controller>
+    class ApplicationMap : IEntityTypeConfiguration<Application>
     {
-        public void Configure(EntityTypeBuilder<Controller> builder)
+        public void Configure(EntityTypeBuilder<Application> builder)
         {
-            builder.ToTable("Controllers");
+            builder.ToTable("Applications");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
-                .HasMaxLength(64)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(64);
 
             builder.HasMany<Authorization>(x => x.Authorizations)
-                .WithOne(x => x.Controller)
-                .HasForeignKey(x => x.ControllerId);
+                .WithOne(x => x.Application)
+                .HasForeignKey(x => x.ApplicationId);
+
         }
     }
 }
