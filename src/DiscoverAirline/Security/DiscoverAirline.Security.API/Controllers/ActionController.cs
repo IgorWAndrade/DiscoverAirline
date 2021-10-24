@@ -20,7 +20,7 @@ namespace DiscoverAirline.Security.API.Controllers
 
 
         [HttpGet("Actions")]
-        [AuthorizationCustom("Security", "ActionController", "Get")]
+        [AuthorizationCustom("Security", nameof(ActionController), "Get")]
         public async Task<IActionResult> Get() => CustomResponse(await _service.GetAsync());
 
     }

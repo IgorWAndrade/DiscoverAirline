@@ -1,5 +1,4 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.CoreAPI.Attribute;
 using DiscoverAirline.Security.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +18,6 @@ namespace DiscoverAirline.Security.API.Controllers
         }
 
         [HttpGet("GetByUser")]
-        [AuthorizationCustom("Security", "UserController", "Get")]
         public async Task<IActionResult> Get() => CustomResponse(await _userService.GetFullAsync(User.Identity.Name));
     }
 }

@@ -20,21 +20,21 @@ namespace DiscoverAirline.Security.API.Controllers
         }
 
         [HttpGet("Access")]
-        [AuthorizationCustom("Security", "AccessController", "Get")]
+        [AuthorizationCustom("Security", nameof(AccessController), "Get")]
         public async Task<IActionResult> Get() => CustomResponse(await _service.GetAsync());
 
         [HttpPost("Access")]
-        [AuthorizationCustom("Security", "AccessController", "Post")]
+        [AuthorizationCustom("Security", nameof(AccessController), "Post")]
         public async Task<IActionResult> Create([FromBody] AccessCreateRequest model) => CustomResponse(await _service.AddAsync(model));
 
 
         [HttpPut("Access")]
-        [AuthorizationCustom("Security", "AccessController", "Put")]
+        [AuthorizationCustom("Security", nameof(AccessController), "Put")]
         public async Task<IActionResult> Update([FromBody] AccessUpdateRequest model) => CustomResponse(await _service.UpdateAsync(model));
 
 
         [HttpDelete("Access")]
-        [AuthorizationCustom("Security", "AccessController", "Delete")]
+        [AuthorizationCustom("Security", nameof(AccessController), "Delete")]
         public async Task<IActionResult> Delete([FromBody] int id) => CustomResponse(await _service.DeleteAsync(id));
     }
 }

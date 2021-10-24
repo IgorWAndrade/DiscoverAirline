@@ -20,11 +20,11 @@ namespace DiscoverAirline.Security.API.Controllers
         }
 
         [HttpPost("ManageFromSecurityToRole")]
-        [AuthorizationCustom("Security", "AuthorizationController", "Put")]
+        [AuthorizationCustom("Security", nameof(AuthorizationController), "Put")]
         public async Task<IActionResult> ManageRoleAuthorization([FromBody] AuthManagerRequest model) => CustomResponse(await _authorizationService.ManagementToAuthorizations(model));
 
         [HttpPost("ManageFromSecuritiesToRole")]
-        [AuthorizationCustom("Security", "AuthorizationController", "Put")]
+        [AuthorizationCustom("Security", nameof(AuthorizationController), "Put")]
         public async Task<IActionResult> ManageRoleAuthorizations([FromBody] AuthManagersRequest model) => CustomResponse(await _authorizationService.ManagementToAuthorizations(model));
 
     }

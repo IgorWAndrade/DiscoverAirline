@@ -74,7 +74,8 @@ GO
 
 --Authorizations
 INSERT INTO Authorizations (RoleId, AccessId, ApplicationId, Active, CreatedDate)
-SELECT R.Id, Ac.Id, Ap.Id, R.Active, GETDATE()  FROM Roles R, Access Ac, Applications Ap
+SELECT R.Id, Ac.Id, Ap.Id, R.Active, GETDATE()  FROM Roles R, Access Ac, Applications Ap 
+WHERE Ap.Name = 'Security'
 
 --AuthorizationsActions
 INSERT INTO ActionAuthorization(ActionsId, AuthorizationsId)
