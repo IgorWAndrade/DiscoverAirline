@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 
 namespace DiscoverAirline.Gateway.API
 {
@@ -21,7 +22,7 @@ namespace DiscoverAirline.Gateway.API
         {
             services.AddApiServices(Configuration);
 
-            services.AddOcelot();
+            services.AddOcelot().AddConsul();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

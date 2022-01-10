@@ -1,0 +1,88 @@
+﻿using DiscoverAirline.Security.Domain.Entities;
+using DiscoverAirline.Security.Rule.Data.Mappings;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Threading.Tasks;
+
+namespace DiscoverAirline.Security.Rule.Data
+{
+    public class SecurityContext : DbContext
+    {
+        protected IDbContextTransaction _contextoTransaction { get; set; }
+        protected SecurityContext _securityContext { get; set; }
+
+        public virtual DbSet<Domain.Entities.Action> Actions { get; set; }
+        public virtual DbSet<Access> Access { get; set; }
+        public virtual DbSet<Application> Applications { get; set; }
+        public virtual DbSet<Authorization> Authorizations { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+
+        public SecurityContext(DbContextOptions<SecurityContext> dbContextOptions)
+            : base(dbContextOptions)
+        { }
+
+        public async Task<IDbContextTransaction> StartTransactionAsync()
+        {
+            if (_contextoTransaction == null)
+            {
+                _contextoTransaction = await this.Database.BeginTransactionAsync();
+            }
+            return _contextoTransaction;
+        }
+
+        public async Task SaveChangesCommitAsync()
+        {
+            await SaveAsync();
+            await CommitAsync();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new ActionMap());
+            modelBuilder.ApplyConfiguration(new AccessMap());
+            modelBuilder.ApplyConfiguration(new RoleMap());
+            modelBuilder.ApplyConfiguration(new AuthorizationMap());
+            modelBuilder.ApplyConfiguration(new ApplicationMap());
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new UserRefreshTokenMap());
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private async Task RollBackAsync()
+        {
+            if (_contextoTransaction != null)
+            {
+                await _contextoTransaction.RollbackAsync();
+            }
+        }
+
+        private async Task SaveAsync()
+        {
+            try
+            {
+                ChangeTracker.DetectChanges();
+                await SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                await RollBackAsync();
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task CommitAsync()
+        {
+            if (_contextoTransaction != null)
+            {
+                await _contextoTransaction.CommitAsync();
+                await _contextoTransaction.DisposeAsync();
+                _contextoTransaction = null;
+            }
+        }
+
+    }
+}

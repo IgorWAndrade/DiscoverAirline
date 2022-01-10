@@ -9,11 +9,15 @@
   "AllowedHosts": "*",
   "SecuritySettings": {
     "Secret": "MEUSEGREDOSUPERSECRETO",
-    "ExpirationInHours": 2,
+    "ExpirationInMinutes": 60,
     "Issuer": "DiscoverAirline",
     "Audience": "https://localhost"
   },
   "Seq": {
     "Uri": "http://localhost:5344/"
+  },
+  "Consul": {
+    "Uri": "http://localhost:8500",
+    "Port": 8500
   }
 }

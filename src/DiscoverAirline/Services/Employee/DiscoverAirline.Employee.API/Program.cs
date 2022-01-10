@@ -24,7 +24,7 @@ namespace DiscoverAirline.Employee.API
             {
                 var env = hostingContext.HostingEnvironment;
 
-                var settingPath = Path.GetFullPath(Path.Combine(@"../../Shareds/DiscoverAirline.CoreAPI/sharedappsettings.json"));
+                var settingPath = Path.GetFullPath(Path.Combine(@"../../../Shareds/DiscoverAirline.CoreAPI/sharedappsettings.json"));
 
                 config
                     .AddJsonFile(Path.Combine(settingPath), optional: false)

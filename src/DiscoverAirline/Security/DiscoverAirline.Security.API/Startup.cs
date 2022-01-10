@@ -1,6 +1,7 @@
 using DiscoverAirline.CoreAPI.Extensions;
 using DiscoverAirline.CoreBroker.Extensions;
 using DiscoverAirline.Security.API.Application.Extensions;
+using DiscoverAirline.Security.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,16 +21,18 @@ namespace DiscoverAirline.Security.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServices(Configuration);
+            services.AddDatabaseServices(Configuration);
+
+            services.InjectorDependenciesServices();
 
             services.AddApiServices(Configuration);
 
             services.AddDocumentationServices(Configuration);
 
-            services.AddAppServices();
-
             services.AddLogServices(Configuration);
 
+            services.AddServiceDiscovery(Configuration);
+            
             services.AddEventBusService(Configuration);
         }
 
@@ -39,6 +42,8 @@ namespace DiscoverAirline.Security.API
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
 
     }

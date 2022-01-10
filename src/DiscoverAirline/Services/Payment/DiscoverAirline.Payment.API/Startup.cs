@@ -23,6 +23,8 @@ namespace DiscoverAirline.Payment.API
             services.AddDocumentationServices(Configuration);
 
             services.AddLogServices(Configuration);
+
+            services.AddServiceDiscovery(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,6 +32,8 @@ namespace DiscoverAirline.Payment.API
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
     }
 }

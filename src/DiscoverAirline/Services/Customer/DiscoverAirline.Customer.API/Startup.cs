@@ -31,6 +31,8 @@ namespace DiscoverAirline.Customer.API
             AddEventBusSubscribers(services);
 
             services.AddLogServices(Configuration);
+
+            services.AddServiceDiscovery(Configuration);
         }
 
         private void AddEventBusSubscribers(IServiceCollection services)
@@ -44,6 +46,8 @@ namespace DiscoverAirline.Customer.API
             app.UseDocumentation(env);
 
             app.UseApi(env);
+
+            app.UseServiceDiscovery(Configuration);
         }
 
     }
