@@ -122,5 +122,6 @@ namespace DiscoverAirline.CoreBroker
         }
 
         private string CreateQueueName(string brokerName, string eventName) => $"{brokerName}:{eventName}";
+
     }
 }

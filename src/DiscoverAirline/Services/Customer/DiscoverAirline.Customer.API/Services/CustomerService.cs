@@ -1,5 +1,5 @@
 ﻿using DiscoverAirline.CoreBroker.Events;
-using DiscoverAirline.Customer.API.Events;
+using System;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Customer.API.Services
@@ -8,7 +8,7 @@ namespace DiscoverAirline.Customer.API.Services
     {
         public Task AddCustomerAsync(IntegrationEvent integrationEvent)
         {
-            //throw new NotImplementedException();
+            Console.WriteLine(integrationEvent);
             return Task.CompletedTask;
         }
     }

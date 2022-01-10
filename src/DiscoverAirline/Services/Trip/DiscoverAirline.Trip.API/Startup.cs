@@ -1,5 +1,5 @@
 using DiscoverAirline.CoreAPI.Extensions;
-using DiscoverAirline.CoreAPI.Settings;
+using DiscoverAirline.Trip.API.Domain.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +19,8 @@ namespace DiscoverAirline.Trip.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApiServices(Configuration);
+
+            services.AddTransient<ICreateCustomerHandler, CreateCustomerHandler>();
 
             services.AddDocumentationServices(Configuration);
 

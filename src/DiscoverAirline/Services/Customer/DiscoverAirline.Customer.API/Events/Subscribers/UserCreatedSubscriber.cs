@@ -2,36 +2,18 @@
 using DiscoverAirline.Customer.API.Events.EventsIntegrations;
 using DiscoverAirline.Customer.API.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
-using System.Threading;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Customer.API.Events.Subscribers
 {
-    public class UserCreatedSubscriber : BackgroundService
+    public class UserCreatedSubscriber : SubscriberEvent<CustomerReceived>
     {
-        private readonly IEventBus _bus;
-        private readonly IServiceProvider _serviceProvider;
+        public UserCreatedSubscriber(IEventBus bus, IServiceProvider serviceProvider) : base(bus, serviceProvider, "UserCreatedEvent") { }
 
-        public UserCreatedSubscriber(
-            IEventBus bus,
-            IServiceProvider serviceProvider
-            )
-        {
-            _bus = bus;
-            _serviceProvider = serviceProvider;
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _bus.SubscribeAsync<CustomerReceived>("UserCreatedEvent", async request => await AddCustomerAsync(request));
-
-            return Task.CompletedTask;
-        }
-
-        private async Task AddCustomerAsync(string request)
+        public override async Task ProcessEvent(string request)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -42,5 +24,29 @@ namespace DiscoverAirline.Customer.API.Events.Subscribers
                 await context.AddCustomerAsync(customerAddressReceived);
             }
         }
+    }
+
+    public class CustomerReceived : IntegrationEvent
+    {
+        [JsonInclude]
+        public string UserId { get; set; }
+        [JsonInclude]
+        public string UserName { get; set; }
+        [JsonInclude]
+        public CustomerAddress Address { get; set; }
+    }
+
+    public class CustomerAddress
+    {
+        [JsonInclude]
+        public string Number { get; set; }
+        [JsonInclude]
+        public string Street { get; set; }
+        [JsonInclude]
+        public string District { get; set; }
+        [JsonInclude]
+        public string City { get; set; }
+        [JsonInclude]
+        public string ZipCode { get; set; }
     }
 }
