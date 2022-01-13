@@ -1,6 +1,5 @@
 using DiscoverAirline.CoreAPI.Extensions;
 using DiscoverAirline.CoreBroker.Extensions;
-using DiscoverAirline.Security.API.Application.Extensions;
 using DiscoverAirline.Security.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -10,10 +10,11 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreAPI\DiscoverAirline.CoreAPI.csproj" />
 		<ProjectReference Include="..\..\Shareds\DiscoverAirline.CoreBroker\DiscoverAirline.CoreBroker.csproj" />
-		<ProjectReference Include="..\DiscoverAirline.Security.Rule\DiscoverAirline.Security.Rule.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.10" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.10" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.10" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.10" />

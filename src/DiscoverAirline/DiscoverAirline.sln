@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{DA013A77-BAE2-41B2-B755-8E6C1920C0D8}"
 EndProject
@@ -57,10 +57,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedDomain", "SharedDomai
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedAPI", "SharedAPI", "{470456C5-7EB3-4ED5-AE60-4C26DD732B94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscoverAirline.Security.Domain", "Security\DiscoverAirline.Security.Domain\DiscoverAirline.Security.Domain.csproj", "{564F1AF2-17AE-4DE3-A126-C6643249CEBA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscoverAirline.Security.Rule", "Security\DiscoverAirline.Security.Rule\DiscoverAirline.Security.Rule.csproj", "{9E0AB022-977D-4284-B995-76B5D89BC254}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,14 +111,6 @@ Global
 		{6124E6D9-79D1-4023-A324-D4E8B952F2D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6124E6D9-79D1-4023-A324-D4E8B952F2D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6124E6D9-79D1-4023-A324-D4E8B952F2D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{564F1AF2-17AE-4DE3-A126-C6643249CEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{564F1AF2-17AE-4DE3-A126-C6643249CEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{564F1AF2-17AE-4DE3-A126-C6643249CEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{564F1AF2-17AE-4DE3-A126-C6643249CEBA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E0AB022-977D-4284-B995-76B5D89BC254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E0AB022-977D-4284-B995-76B5D89BC254}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E0AB022-977D-4284-B995-76B5D89BC254}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E0AB022-977D-4284-B995-76B5D89BC254}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,8 +140,6 @@ Global
 		{2EE6A363-1E51-4FED-A785-77F802AD5E99} = {DA013A77-BAE2-41B2-B755-8E6C1920C0D8}
 		{96C1A209-4170-436C-834C-A6499C8B961A} = {DA013A77-BAE2-41B2-B755-8E6C1920C0D8}
 		{470456C5-7EB3-4ED5-AE60-4C26DD732B94} = {DA013A77-BAE2-41B2-B755-8E6C1920C0D8}
-		{564F1AF2-17AE-4DE3-A126-C6643249CEBA} = {29C68121-2F3F-42A6-ADA0-737BC9890EB4}
-		{9E0AB022-977D-4284-B995-76B5D89BC254} = {29C68121-2F3F-42A6-ADA0-737BC9890EB4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38E09ECD-3D8B-4730-9EDA-2C4B2912D50A}

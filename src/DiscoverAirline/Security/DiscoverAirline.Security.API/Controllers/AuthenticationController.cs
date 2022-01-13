@@ -1,37 +1,53 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.Security.Domain.Interfaces.Services;
-using DiscoverAirline.Security.Rule.Applications.Request.User;
+using DiscoverAirline.Security.API.Rules.Services.Interfaces;
+using DiscoverAirline.Security.API.Rules.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscoverAirline.Security.API.Controllers
 {
     public class AuthenticationController : CoreController
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IUserService _userService;
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
-            IAuthenticationService authenticationService) : base(logger)
+            IUserService userService) : base(logger)
         {
-            _authenticationService = authenticationService;
+            _userService = userService;
         }
 
         [HttpPost("Signup")]
         [AllowAnonymous]
-        public async Task<IActionResult> Signup([FromBody] UserRegisterRequest model) => CustomResponse(await _authenticationService.RegisterAsync(model));
+        public async Task<IActionResult> Signup([FromBody] UsuarioRegistro usuarioLogin)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            return CustomResponse(await _userService.RegisterAsync(usuarioLogin));
+        }
 
         [HttpPost("Signin")]
         [AllowAnonymous]
-        public async Task<IActionResult> Signin([FromBody] UserLoginRequest model) => CustomResponse(await _authenticationService.LoginAsync(model));
+        public async Task<IActionResult> Signin([FromBody] UsuarioLogin usuarioLogin)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            return CustomResponse(await _userService.LoginAsync(usuarioLogin));
+        }
 
         [HttpPost("Signout")]
-        public async Task<IActionResult> Signout() => CustomResponse(await _authenticationService.LogoutAsync(HttpContext.User.Identity.Name));
+        public async Task<IActionResult> Signout() => CustomResponse(await _userService.LogoutAsync(User.Identity.Name));
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh([FromBody] string refreshToken) => CustomResponse(await _authenticationService.RefreshTokenAsync(refreshToken));
+        public async Task<IActionResult> Refresh()
+        {
+            var token = User.Claims.FirstOrDefault(x => x.Type.Equals("RefreshToken")).Value;
+
+            return CustomResponse(await _userService.LoginRefreshAsync(token));
+        }
 
     }
 }
