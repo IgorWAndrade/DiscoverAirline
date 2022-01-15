@@ -1,8 +1,8 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.CoreAPI.Settings;
+using DiscoverAirline.Security.API.Application.Services.Interfaces;
+using DiscoverAirline.Security.API.Application.ViewModels;
 using DiscoverAirline.Security.API.Repositories;
-using DiscoverAirline.Security.API.Rules.Services.Interfaces;
-using DiscoverAirline.Security.API.Rules.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Rules.Services
+namespace DiscoverAirline.Security.API.Application.Services
 {
     public class TokenService : ITokenService
     {
@@ -41,7 +41,7 @@ namespace DiscoverAirline.Security.API.Rules.Services
             var notification = Notification.Create();
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
-            var storedRefreshToken = await _applicationDbContext.UserRefreshTokens.FirstAsync(x => x.Token.Equals(userRefresh));
+            var storedRefreshToken = await _applicationDbContext.AspNetUsersRefreshTokens.FirstAsync(x => x.Token.Equals(userRefresh));
             if (storedRefreshToken == null)
                 notification.AddError("Não existe um Token de Atualização para este Usuario");
 
@@ -105,14 +105,14 @@ namespace DiscoverAirline.Security.API.Rules.Services
 
         private async Task SetRefreshTokenAsync(string userId, UserRefreshToken tokenRefresh)
         {
-            var refreshToken = await _applicationDbContext.UserRefreshTokens.FirstOrDefaultAsync(x => x.UserId == userId);
+            var refreshToken = await _applicationDbContext.AspNetUsersRefreshTokens.FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (refreshToken != null)
             {
-                _applicationDbContext.UserRefreshTokens.Remove(refreshToken);
+                _applicationDbContext.AspNetUsersRefreshTokens.Remove(refreshToken);
             }
 
-            await _applicationDbContext.UserRefreshTokens.AddAsync(tokenRefresh);
+            await _applicationDbContext.AspNetUsersRefreshTokens.AddAsync(tokenRefresh);
             await _applicationDbContext.SaveChangesAsync();
         }
 

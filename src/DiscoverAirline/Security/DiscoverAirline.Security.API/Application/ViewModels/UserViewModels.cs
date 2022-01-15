@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace DiscoverAirline.Security.API.Rules.ViewModels
+namespace DiscoverAirline.Security.API.Application.ViewModels
 {
     public class UsuarioRegistro
     {

@@ -1,12 +1,12 @@
 ﻿using DiscoverAirline.Core;
+using DiscoverAirline.Security.API.Application.Services.Interfaces;
+using DiscoverAirline.Security.API.Application.ViewModels;
 using DiscoverAirline.Security.API.Repositories;
-using DiscoverAirline.Security.API.Rules.Services.Interfaces;
-using DiscoverAirline.Security.API.Rules.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Rules.Services
+namespace DiscoverAirline.Security.API.Application.Services
 {
     public class UserService : IUserService
     {
@@ -53,7 +53,7 @@ namespace DiscoverAirline.Security.API.Rules.Services
 
         public async Task<Notification> LoginRefreshAsync(string refreshToken)
         {
-            var userId = _applicationDbContext.UserRefreshTokens.FirstOrDefault(x => x.Token.Equals(refreshToken)).UserId;
+            var userId = _applicationDbContext.AspNetUsersRefreshTokens.FirstOrDefault(x => x.Token.Equals(refreshToken)).UserId;
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user != null)
@@ -78,8 +78,8 @@ namespace DiscoverAirline.Security.API.Rules.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
             {
-                var storedRefreshToken = _applicationDbContext.UserRefreshTokens.FirstOrDefault(x => x.UserId.Equals(user.Id));
-                _applicationDbContext.UserRefreshTokens.Remove(storedRefreshToken);
+                var storedRefreshToken = _applicationDbContext.AspNetUsersRefreshTokens.FirstOrDefault(x => x.UserId.Equals(user.Id));
+                _applicationDbContext.AspNetUsersRefreshTokens.Remove(storedRefreshToken);
                 await _signInManager.SignOutAsync();
             }
             else

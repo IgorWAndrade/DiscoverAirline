@@ -1,10 +1,10 @@
-﻿using DiscoverAirline.Security.API.Rules.ViewModels;
+﻿using DiscoverAirline.Security.API.Application.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Rules.Services.Interfaces
+namespace DiscoverAirline.Security.API.Application.Services.Interfaces
 {
     public interface ITokenService
     {

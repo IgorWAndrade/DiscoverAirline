@@ -1,8 +1,8 @@
 ﻿using DiscoverAirline.Core;
-using DiscoverAirline.Security.API.Rules.ViewModels;
+using DiscoverAirline.Security.API.Application.ViewModels;
 using System.Threading.Tasks;
 
-namespace DiscoverAirline.Security.API.Rules.Services.Interfaces
+namespace DiscoverAirline.Security.API.Application.Services.Interfaces
 {
     public interface IUserService
     {

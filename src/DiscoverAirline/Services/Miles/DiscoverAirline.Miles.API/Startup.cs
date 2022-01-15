@@ -24,7 +24,7 @@ namespace DiscoverAirline.Miles.API
 
             services.AddLogServices(Configuration);
 
-            services.AddServiceDiscovery(Configuration);
+            services.AddDiscoveryService(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,7 +33,7 @@ namespace DiscoverAirline.Miles.API
 
             app.UseApi(env);
 
-            app.UseServiceDiscovery(Configuration);
+            app.UseDiscovery(Configuration);
         }
     }
 }

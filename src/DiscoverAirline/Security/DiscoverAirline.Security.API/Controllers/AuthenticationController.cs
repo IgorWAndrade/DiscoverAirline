@@ -1,6 +1,6 @@
 ﻿using DiscoverAirline.CoreAPI;
-using DiscoverAirline.Security.API.Rules.Services.Interfaces;
-using DiscoverAirline.Security.API.Rules.ViewModels;
+using DiscoverAirline.Security.API.Application.Services.Interfaces;
+using DiscoverAirline.Security.API.Application.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

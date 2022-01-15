@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace DiscoverAirline.CoreAPI.Extensions
 {
-    public static class ServiceDiscoveryExtension
+    public static class DiscoveryExtension
     {
-        public static IServiceCollection AddServiceDiscovery(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDiscoveryService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IConsulClient, ConsulClient>(p => new ConsulClient(consulConfig =>
             {
@@ -24,7 +24,7 @@ namespace DiscoverAirline.CoreAPI.Extensions
             return services;
         }
 
-        public static IApplicationBuilder UseServiceDiscovery(this IApplicationBuilder app, IConfiguration configuration                            )
+        public static IApplicationBuilder UseDiscovery(this IApplicationBuilder app, IConfiguration configuration                            )
         {
             var serviceId = configuration["Consul:ServiceId"];
             var serviceName = configuration["Consul:ServiceName"];

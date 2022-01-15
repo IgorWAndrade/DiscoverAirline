@@ -23,7 +23,7 @@ namespace DiscoverAirline.Notification.App
 
             services.AddLogServices(Configuration);
 
-            services.AddServiceDiscovery(Configuration);
+            services.AddDiscoveryService(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,7 +32,7 @@ namespace DiscoverAirline.Notification.App
 
             app.UseApi(env);
 
-            app.UseServiceDiscovery(Configuration);
+            app.UseDiscovery(Configuration);
         }
     }
 }

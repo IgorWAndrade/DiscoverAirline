@@ -30,7 +30,7 @@ namespace DiscoverAirline.Security.API
 
             services.AddLogServices(Configuration);
 
-            services.AddServiceDiscovery(Configuration);
+            services.AddDiscoveryService(Configuration);
             
             services.AddEventBusService(Configuration);
         }
@@ -42,7 +42,7 @@ namespace DiscoverAirline.Security.API
 
             app.UseApi(env);
 
-            app.UseServiceDiscovery(Configuration);
+            app.UseDiscovery(Configuration);
         }
 
     }
