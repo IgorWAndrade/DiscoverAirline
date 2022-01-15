@@ -1,5 +1,5 @@
-﻿using DiscoverAirline.Security.API.Rules.Services;
-using DiscoverAirline.Security.API.Rules.Services.Interfaces;
+﻿using DiscoverAirline.Security.API.Application.Services;
+using DiscoverAirline.Security.API.Application.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DiscoverAirline.Security.API.Extensions

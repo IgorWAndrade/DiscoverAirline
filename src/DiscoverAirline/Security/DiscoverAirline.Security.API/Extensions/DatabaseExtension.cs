@@ -1,4 +1,4 @@
-﻿using DiscoverAirline.Security.API.Repositories;
+﻿using DiscoverAirline.Security.API.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

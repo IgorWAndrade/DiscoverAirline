@@ -1,7 +1,7 @@
 ﻿using DiscoverAirline.Core;
 using DiscoverAirline.Security.API.Application.Services.Interfaces;
 using DiscoverAirline.Security.API.Application.ViewModels;
-using DiscoverAirline.Security.API.Repositories;
+using DiscoverAirline.Security.API.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using System.Threading.Tasks;

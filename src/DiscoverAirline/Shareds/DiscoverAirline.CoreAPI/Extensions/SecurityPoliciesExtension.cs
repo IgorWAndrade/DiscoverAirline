@@ -14,12 +14,12 @@ namespace DiscoverAirline.CoreAPI.Extensions
                 {
                     foreach (var claim in item.Claims)
                     {
-                        x.AddPolicy(BuildPolicyName(claim), policy =>
-                        {
-                            policy.RequireRole(item.Service);
-                            policy.RequireClaim(claim.Controller);
-                            policy.RequireClaim(claim.Action);
-                        });
+                        x.AddPolicy(BuildPolicyName(claim.Controller, claim.Action), policy =>
+                         {
+                             policy.RequireRole(item.Service);
+                             policy.RequireClaim(claim.Controller);
+                             policy.RequireClaim(claim.Action);
+                         });
                     }
                 }
             });
@@ -27,6 +27,6 @@ namespace DiscoverAirline.CoreAPI.Extensions
             return services;
         }
 
-        private static string BuildPolicyName(ClaimSecurity item) => string.Format("{0}:{1}", item.Controller, item.Action);
+        public static string BuildPolicyName(string controller, string action) => string.Format("{0}:{1}", controller, action);
     }
 }
