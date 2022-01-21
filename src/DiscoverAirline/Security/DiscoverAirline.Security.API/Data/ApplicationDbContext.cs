@@ -1,4 +1,5 @@
-﻿using DiscoverAirline.Security.API.Domain;
+﻿using DiscoverAirline.Security.API.Data.Mappings;
+using DiscoverAirline.Security.API.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiscoverAirline.Security.API.Data
@@ -14,5 +15,18 @@ namespace DiscoverAirline.Security.API.Data
         public virtual DbSet<Access> Accesses { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new UserTokenMap());
+            modelBuilder.ApplyConfiguration(new RoleMap());
+            modelBuilder.ApplyConfiguration(new PolicyMap());
+            modelBuilder.ApplyConfiguration(new ApplicationMap());
+            modelBuilder.ApplyConfiguration(new RoleMap());
+            modelBuilder.ApplyConfiguration(new AccessMap());
+            modelBuilder.ApplyConfiguration(new ActionMap());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

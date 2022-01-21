@@ -1,4 +1,5 @@
 ﻿using DiscoverAirline.Core;
+using System.Collections.Generic;
 
 namespace DiscoverAirline.Security.API.Domain
 {
@@ -9,5 +10,7 @@ namespace DiscoverAirline.Security.API.Domain
         public int ApplicationId { get; set; }
 
         public virtual Application Application { get; set; }
+
+        public virtual List<Policy> Policies { get; set; }
     }
 }

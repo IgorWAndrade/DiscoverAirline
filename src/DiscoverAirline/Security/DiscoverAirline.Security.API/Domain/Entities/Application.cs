@@ -8,5 +8,7 @@ namespace DiscoverAirline.Security.API.Domain
         public string Name { get; set; }
 
         public virtual List<Access> Accessess { get; set; }
+
+        public virtual List<Policy> Policies { get; set; }
     }
 }
