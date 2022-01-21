@@ -6,7 +6,7 @@ namespace DiscoverAirline.Security.API.Domain
 {
     public class UserToken : BaseEntity
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
 
         public string Token { get; set; }
 
